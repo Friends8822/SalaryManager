@@ -103,9 +103,7 @@
         </div>
         <div style="margin-bottom:16px">
           <label style="font-size:14px;font-weight:600;display:block;margin-bottom:8px">📅 日期</label>
-          <div class="date-input-wrap">
-            <input class="input" v-model="expenseDate" type="date" />
-          </div>
+          <DatePicker v-model="expenseDate" />
         </div>
         <div style="margin-bottom:16px">
           <label style="font-size:14px;font-weight:600;display:block;margin-bottom:8px">备注（可选）</label>
@@ -121,6 +119,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../stores/app'
+import DatePicker from '../components/DatePicker.vue'
 
 const router = useRouter()
 const store = useAppStore()
