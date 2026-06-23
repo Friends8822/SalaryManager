@@ -110,11 +110,7 @@
 </script>
 <style>
 
-        body {
-            font-family: 'Hanken Grotesk', sans-serif;
-            background-color: #F7FBF4;
-            -webkit-tap-highlight-color: transparent;
-        }
+        
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
@@ -135,17 +131,21 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
     
-body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
+body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 .page { display: none; }
 .page.active { display: block; }
-.fade-in { animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.app-shell { max-width: 480px; margin: 0 auto; min-height: 100dvh; }
+.material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+.sprout-float { animation: float 6s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.input-focus-ring:focus-within { box-shadow: 0 0 0 2px #2e6c00; }
 </style>
 </head>
-<body class="bg-background text-on-background min-h-screen">
+<body class="bg-bg-light text-on-background min-h-screen">
 
 <!-- LOGIN -->
 <div class="page active" id="page-login">
+  <div class="app-shell bg-background text-on-background min-h-screen flex flex-col items-center justify-center px-container-margin relative overflow-hidden">
 
 <!-- Atmospheric Background Decoration -->
 <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -157,7 +157,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6 mx-auto sprout-float shadow-sm border border-primary/10">
 <span class="material-symbols-outlined text-on-primary-container text-[40px]" data-icon="sprint">sprint</span>
 </div>
-<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">login</h1>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">登录</h1>
 <p class="font-body-md text-body-md text-on-surface-variant">欢迎回来，开启清新理财的一天</p>
 </header>
 <!-- Form Section -->
@@ -228,10 +228,12 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
     }
 </script>
 
+  </div>
 </div>
 
 <!-- REGISTER -->
 <div class="page" id="page-register">
+  <div class="app-shell bg-background flex flex-col items-center overflow-x-hidden">
 
 <!-- Atmospheric Background Decoration -->
 <div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -393,15 +395,17 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
             setTimeout(() => {
                 alert('注册成功！正在为您跳转到登录页面。');
                 // Target navigation after mock success
-                switchTo('login');
+                window.location.href = ''#'';
             }, 1500);
         }
     </script>
 
+  </div>
 </div>
 
 <!-- DASHBOARD -->
 <div class="page" id="page-dashboard">
+  <div class="app-shell bg-bg-light text-on-background min-h-screen pb-32">
 
 <!-- TopAppBar -->
 <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-container-margin h-touch-target">
@@ -415,7 +419,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
 </button>
 <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95" onclick="switchTo('settings')">
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">设置</span>
 </button>
 </div>
 </header>
@@ -527,7 +531,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <span class="font-body-lg text-body-lg font-bold text-on-surface">- ¥235.00</span>
 </div>
 </div>
-<button class="w-full h-12 flex items-center justify-center text-primary font-body-md border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors active:scale-95" onclick="switchTo('records')">records</button>
+<button class="w-full h-12 flex items-center justify-center text-primary font-body-md border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors active:scale-95" onclick="switchTo('records')">全部记录</button>
 </section>
 </main>
 <!-- Floating Action Button -->
@@ -541,17 +545,17 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
 <span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
 </div>
-<span class="font-label-sm text-label-sm font-semibold text-primary">dashboard</span>
+<span class="font-label-sm text-label-sm font-semibold text-primary">首页</span>
 </a>
 <!-- Statistics -->
 <a class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-transform" href="#" onclick="switchTo('statistics');return false">
 <span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
-<span class="font-label-sm text-label-sm">statistics</span>
+<span class="font-label-sm text-label-sm">统计</span>
 </a>
 <!-- Settings -->
 <a class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-transform" href="#" onclick="switchTo('settings');return false">
 <span class="material-symbols-outlined mb-1" data-icon="settings">设置</span>
-<span class="font-label-sm text-label-sm">settings</span>
+<span class="font-label-sm text-label-sm">设置</span>
 </a>
 </nav>
 <script>
@@ -566,17 +570,19 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
         });
     </script>
 
+  </div>
 </div>
 
 <!-- RECORDS -->
 <div class="page" id="page-records">
+  <div class="app-shell bg-bg-light text-on-surface">
 
 <!-- TopAppBar -->
 <header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-container-margin h-touch-target">
 <button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full" onclick="switchTo('dashboard')">
 <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
 </button>
-<h1 class="font-headline-lg text-headline-lg font-bold text-primary">records</h1>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">全部记录</h1>
 <button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full">
 <span class="material-symbols-outlined" data-icon="search">search</span>
 </button>
@@ -718,7 +724,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <span class="font-label-sm">统计</span>
 </a>
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="switchTo('settings');return false">
-<span class="material-symbols-outlined">settings</span>
+<span class="material-symbols-outlined">设置</span>
 <span class="font-label-sm">设置</span>
 </a>
 </div>
@@ -771,17 +777,19 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
         });
     </script>
 
+  </div>
 </div>
 
-<!-- RECORD PANEL -->
+<!-- RECORD_PANEL -->
 <div class="page" id="page-record_panel">
+  <div class="app-shell bg-bg-light text-on-background min-h-screen overflow-hidden">
 
 <!-- Background Content (Blurred Home Dashboard) -->
 <div class="fixed inset-0 z-0 opacity-40 blur-sm pointer-events-none">
 <header class="flex justify-between items-center p-container-margin h-touch-target">
 <span class="material-symbols-outlined text-primary">calendar_today</span>
 <h1 class="font-headline-lg text-primary font-bold">4月</h1>
-<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant">设置</span>
 </header>
 <div class="px-container-margin space-y-6">
 <div class="h-32 w-full bg-surface-container rounded-2xl"></div>
@@ -984,7 +992,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
                 return;
             }
             // Success animation or feedback could go here
-            switchTo('dashboard');
+            window.location.href = "'#'";
         }
 
         // Handle native touch feedback
@@ -998,10 +1006,12 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
         });
     </script>
 
+  </div>
 </div>
 
 <!-- STATISTICS -->
 <div class="page" id="page-statistics">
+  <div class="app-shell bg-bg-light text-on-background min-h-screen pb-32">
 
 <!-- TopAppBar -->
 <header class="w-full top-0 sticky z-40 bg-bg-light flex justify-between items-center px-container-margin h-touch-target">
@@ -1180,7 +1190,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 </a>
 <!-- Settings -->
 <a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="#" onclick="switchTo('settings');return false">
-<span class="material-symbols-outlined">settings</span>
+<span class="material-symbols-outlined">设置</span>
 <span class="font-label-sm text-label-sm">设置</span>
 </a>
 </nav>
@@ -1205,10 +1215,12 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
         });
     </script>
 
+  </div>
 </div>
 
 <!-- SETTINGS -->
 <div class="page" id="page-settings">
+  <div class="app-shell text-on-background pb-32">
 
 <!-- Top AppBar -->
 <header class="bg-background/80 backdrop-blur-md w-full sticky top-0 z-40">
@@ -1216,7 +1228,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <button class="active:scale-95 duration-200 text-primary" onclick="window.history.back()">
 <span class="material-symbols-outlined">arrow_back</span>
 </button>
-<h1 class="font-headline-lg text-headline-lg text-primary font-bold">settings</h1>
+<h1 class="font-headline-lg text-headline-lg text-primary font-bold">设置</h1>
 <button class="active:scale-95 duration-200 text-primary">
 <span class="material-symbols-outlined">search</span>
 </button>
@@ -1344,7 +1356,7 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
 <!-- Settings (Active) -->
 <button class="flex flex-col items-center justify-center py-2 px-6 text-primary active:scale-95 transition-all duration-200" onclick="switchTo('login')">
 <div class="bg-primary-container/30 rounded-full px-5 py-1 mb-0.5">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">设置</span>
 </div>
 <span class="font-label-sm text-label-sm font-bold">设置</span>
 </button>
@@ -1376,54 +1388,36 @@ body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
         });
     </script>
 
+  </div>
 </div>
 
 <script>
 function switchTo(page) {
-  document.querySelectorAll('.page').forEach(function(el) { el.classList.remove('active'); });
-  var target = document.getElementById('page-' + page);
-  if (target) {
-    target.classList.add('active');
-    target.scrollTop = 0;
-    window.scrollTo(0, 0);
-  }
+  document.querySelectorAll(".page").forEach(function(el) { el.classList.remove("active"); });
+  var target = document.getElementById("page-" + page);
+  if (target) { target.classList.add("active"); target.scrollTop = 0; window.scrollTo(0, 0); }
 }
-
-// Handle record_panel special keyboard functions
 window.appendNum = function(n) {
-  var input = document.querySelector('#page-record_panel input[type="text"]');
+  var input = document.querySelector("#page-record_panel input[type=text]");
   if (!input) return;
-  var val = input.value;
-  // Limit input length
-  if (val.replace(/[^0-9]/g,'').length >= 10) return;
+  var val = input.value.replace(/[^0-9.]/g,"");
+  if (val.length >= 10) return;
   input.value = val + n;
-  var amt = parseFloat(input.value.replace(/[^0-9.]/g,''));
 };
-
-window.togglePassword = function(id) {
-  var input = document.getElementById(id || 'password');
-  var icon = document.getElementById('eye-icon');
-  if (!input) return;
-  if (input.type === 'password') {
-    input.type = 'text';
-    if (icon) icon.innerText = 'visibility_off';
-  } else {
-    input.type = 'password';
-    if (icon) icon.innerText = 'visibility';
-  }
-};
-
 window.deleteLastChar = function() {
-  var input = document.querySelector('#page-record_panel input[type="text"]');
+  var input = document.querySelector("#page-record_panel input[type=text]");
   if (!input) return;
   input.value = input.value.slice(0, -1);
 };
-
-// Enter key on login
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.getElementById('page-login').classList.contains('active')) {
-    switchTo('dashboard');
-  }
+window.togglePassword = function(id) {
+  var input = document.getElementById(id || "password");
+  var icon = document.getElementById("eye-icon");
+  if (!input) return;
+  if (input.type === "password") { input.type = "text"; if (icon) icon.innerText = "visibility_off"; }
+  else { input.type = "password"; if (icon) icon.innerText = "visibility"; }
+};
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && document.getElementById("page-login").classList.contains("active")) { switchTo("dashboard"); }
 });
 </script>
 </body>
