@@ -36,5 +36,5 @@ function edit(e) {
   localStorage.setItem('edit_expense', JSON.stringify(e))
   window.location.hash = '#/'
 }
-async function del(id) { if (!confirm('确定删除？')) return; try { await store.deleteExpense(id) } catch(e) { alert(e.message) } }
+async function del(id) { if (!confirm('确定删除？')) return; try { await store.deleteExpense(id) } catch(e) { store.showToast(e.message, 'error') } }
 </script>

@@ -74,7 +74,7 @@ function prevMonth() { currentMonth.value = new Date(currentMonth.value.getFullY
 function nextMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()+1, 1); store.loadAll(monthStr(currentMonth.value)).then(()=>nextTick(drawCharts)) }
 
 function exportCSV() {
-  const exps = store.expenses; if (!exps.length) { alert('无记录'); return }
+  const exps = store.expenses; if (!exps.length) { store.showToast('无记录', 'error') return }
   const csv = '﻿日期,分类,金额,备注\n' + exps.map(e=>`${e.expenseDate},${e.category?.name||''},-${e.amount},${e.note||''}`).join('\n')
   const b = new Blob([csv], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a')
   a.href = URL.createObjectURL(b); a.download = `财务管家_${currentMonth.value.getFullYear()}-${String(currentMonth.value.getMonth()+1).padStart(2,'0')}.csv`; a.click()

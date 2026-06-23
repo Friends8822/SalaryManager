@@ -159,20 +159,20 @@ function editExpense(e) { editingId.value = e.id; selectedCatId.value = e.catego
 
 async function submit() {
   const amt = parseFloat(amount.value)
-  if (!amt || amt <= 0) { alert('请输入有效金额'); return }
+  if (!amt || amt <= 0) { store.showToast('请输入有效金额', 'error') return }
   submitting.value = true
   try {
     const data = { categoryId: selectedCatId.value || store.categories[0]?.id, amount: Math.round(amt*100)/100, note: note.value, expenseDate: expenseDate.value }
     if (editingId.value) await store.updateExpense(editingId.value, data)
     else await store.addExpense(data)
     closeAdd()
-  } catch (e) { alert(e.message) }
+  } catch (e) { store.showToast(e.message, 'error') }
   finally { submitting.value = false }
 }
 
 async function del(id) {
   if (!confirm('确定删除？')) return
-  try { await store.deleteExpense(id) } catch (e) { alert(e.message) }
+  try { await store.deleteExpense(id) } catch (e) { store.showToast(e.message, 'error') }
 }
 
 function logout() { store.logout(); router.push('/login') }

@@ -42,8 +42,8 @@ async function register() {
   loading.value = true; error.value = ''
   try {
     await store.register(username.value, password.value)
-    alert('注册成功，请登录')
-    router.push('/login')
+    store.showToast('注册成功，请登录', 'success')
+    setTimeout(() => router.push('/login'), 800)
   } catch (e) {
     error.value = e.message
   } finally { loading.value = false }

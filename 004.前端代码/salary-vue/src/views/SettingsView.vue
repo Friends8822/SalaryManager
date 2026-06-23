@@ -26,7 +26,7 @@ import { useAppStore } from '../stores/app'
 const router = useRouter(); const store = useAppStore()
 function logout() { store.logout(); router.push('/login') }
 function exportCSV() {
-  const exps = store.expenses; if (!exps.length) { alert('无记录'); return }
+  const exps = store.expenses; if (!exps.length) { store.showToast('无记录', 'error') return }
   const m = new Date(); const month = m.getFullYear()+'-'+String(m.getMonth()+1).padStart(2,'0')
   const csv = '﻿日期,分类,金额,备注\n' + exps.map(e=>`${e.expenseDate},${e.category?.name||''},-${e.amount},${e.note||''}`).join('\n')
   const b = new Blob([csv],{type:'text/csv;charset=utf-8'}); const a = document.createElement('a')

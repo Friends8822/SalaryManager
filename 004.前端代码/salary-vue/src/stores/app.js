@@ -10,8 +10,15 @@ export const useAppStore = defineStore('app', {
     categories: [],
     budget: null,
     loading: false,
+    toastMsg: '',
+    toastType: 'success',
+    toastVisible: false,
   }),
   actions: {
+    showToast(msg, type) {
+      this.toastMsg = msg; this.toastType = type || 'success'; this.toastVisible = true
+      setTimeout(() => { this.toastVisible = false }, 2500)
+    },
     async login(username, password) {
       const res = await authAPI.login({ username, password })
       if (res.data.code === 200) {

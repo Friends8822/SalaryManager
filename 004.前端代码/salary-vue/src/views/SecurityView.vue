@@ -39,7 +39,7 @@ async function changePwd() {
   loading.value = true; error.value = ''
   try {
     await store.changePassword(oldPwd.value, newPwd.value)
-    alert('密码修改成功'); router.push('/settings')
+    store.showToast('密码修改成功', 'success') router.push('/settings')
   } catch(e) { error.value = e.message }
   finally { loading.value = false }
 }
