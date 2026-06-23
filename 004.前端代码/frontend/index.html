@@ -139,6 +139,14 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 .sprout-float { animation: float 6s ease-in-out infinite; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .input-focus-ring:focus-within { box-shadow: 0 0 0 2px #2e6c00; }
+
+/* Responsive FAB & nav positioning */
+@media (min-width: 520px) {
+  .fab-right { right: calc(50% - 220px) !important; }
+  .fab-left { left: calc(50% - 240px) !important; }
+  .nav-fixed { left: 50% !important; transform: translateX(-50%) !important; max-width: 480px; }
+  .bottom-nav-fixed { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; max-width: 480px; }
+}
 </style>
 </head>
 <body class="bg-bg-light text-on-background min-h-screen">
@@ -419,7 +427,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 <span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
 </button>
 <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95" onclick="switchTo('settings')">
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">设置</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
 </button>
 </div>
 </header>
@@ -535,11 +543,11 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </section>
 </main>
 <!-- Floating Action Button -->
-<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center transition-transform duration-200 z-40 active:scale-90" onclick="switchTo('record_panel')">
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full fab-right shadow-lg flex items-center justify-center transition-transform duration-200 z-40 active:scale-90" onclick="switchTo('record_panel')">
 <span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
 </button>
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<nav class="fixed bottom-0 left-0 w-full nav-fixed flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
 <!-- Home (Active) -->
 <a class="flex flex-col items-center justify-center py-2 px-6 active:scale-95 transition-transform" href="#" onclick="switchTo('dashboard');return false">
 <div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
@@ -554,7 +562,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </a>
 <!-- Settings -->
 <a class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-transform" href="#" onclick="switchTo('settings');return false">
-<span class="material-symbols-outlined mb-1" data-icon="settings">设置</span>
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
 <span class="font-label-sm text-label-sm">设置</span>
 </a>
 </nav>
@@ -707,11 +715,11 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </div>
 </main>
 <!-- Floating Action Button -->
-<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" onclick="switchTo('record_panel')">
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40 fab-right" onclick="switchTo('record_panel')">
 <span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
 </button>
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/10 ios-safe-bottom z-50">
+<nav class="fixed bottom-0 left-0 w-full nav-fixed bg-surface-container-lowest border-t border-outline-variant/10 ios-safe-bottom z-50">
 <div class="flex justify-around items-center h-16 px-4">
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="switchTo('dashboard');return false">
 <span class="material-symbols-outlined">home</span>
@@ -724,7 +732,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 <span class="font-label-sm">统计</span>
 </a>
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="switchTo('settings');return false">
-<span class="material-symbols-outlined">设置</span>
+<span class="material-symbols-outlined">settings</span>
 <span class="font-label-sm">设置</span>
 </a>
 </div>
@@ -789,7 +797,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 <header class="flex justify-between items-center p-container-margin h-touch-target">
 <span class="material-symbols-outlined text-primary">calendar_today</span>
 <h1 class="font-headline-lg text-primary font-bold">4月</h1>
-<span class="material-symbols-outlined text-on-surface-variant">设置</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
 </header>
 <div class="px-container-margin space-y-6">
 <div class="h-32 w-full bg-surface-container rounded-2xl"></div>
@@ -1173,11 +1181,11 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </section>
 </main>
 <!-- FAB -->
-<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full fab-right shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
 <span class="material-symbols-outlined text-3xl">add</span>
 </button>
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-4 pb-safe bg-surface-container-lowest shadow-[0_-2px_12px_rgba(0,0,0,0.05)] z-50 rounded-t-xl">
+<nav class="fixed bottom-0 left-0 w-full nav-fixed flex justify-around items-center py-2 px-4 pb-safe bg-surface-container-lowest shadow-[0_-2px_12px_rgba(0,0,0,0.05)] z-50 rounded-t-xl">
 <!-- Home -->
 <a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="#" onclick="switchTo('dashboard');return false">
 <span class="material-symbols-outlined">home</span>
@@ -1190,7 +1198,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </a>
 <!-- Settings -->
 <a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="#" onclick="switchTo('settings');return false">
-<span class="material-symbols-outlined">设置</span>
+<span class="material-symbols-outlined">settings</span>
 <span class="font-label-sm text-label-sm">设置</span>
 </a>
 </nav>
@@ -1342,7 +1350,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </section>
 </main>
 <!-- Bottom NavBar -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.04)]">
+<nav class="fixed bottom-0 left-0 w-full nav-fixed flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.04)]">
 <!-- Home -->
 <button class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" onclick="switchTo('dashboard')">
 <span class="material-symbols-outlined mb-0.5">home</span>
@@ -1356,7 +1364,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 <!-- Settings (Active) -->
 <button class="flex flex-col items-center justify-center py-2 px-6 text-primary active:scale-95 transition-all duration-200" onclick="switchTo('login')">
 <div class="bg-primary-container/30 rounded-full px-5 py-1 mb-0.5">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">设置</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
 </div>
 <span class="font-label-sm text-label-sm font-bold">设置</span>
 </button>
