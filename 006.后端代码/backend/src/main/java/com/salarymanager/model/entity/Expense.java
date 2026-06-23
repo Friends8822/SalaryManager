@@ -1,5 +1,6 @@
 package com.salarymanager.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
     @Index(name = "idx_expense_category", columnList = "category_id"),
     @Index(name = "idx_expense_user_cat_date", columnList = "user_id,category_id,expense_date")
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Expense {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +41,7 @@ public class Expense {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", insertable = false, updatable = false)
     private Category category;
 
