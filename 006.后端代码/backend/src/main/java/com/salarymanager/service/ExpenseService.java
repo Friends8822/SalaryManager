@@ -147,7 +147,12 @@ public class ExpenseService {
     }
 
     public Budget setBudget(Long userId, BudgetRequest req) {
-        Budget b = budgetRepo.findByUserIdAndBudgetMonthAndCategoryId(userId, req.budgetMonth, req.categoryId).orElse(new Budget());
+        Budget b;
+        if (req.categoryId == null) {
+            b = budgetRepo.findByUserIdAndBudgetMonthAndCategoryIdIsNull(userId, req.budgetMonth).orElse(new Budget());
+        } else {
+            b = budgetRepo.findByUserIdAndBudgetMonthAndCategoryId(userId, req.budgetMonth, req.categoryId).orElse(new Budget());
+        }
         b.setUserId(userId); b.setBudgetMonth(req.budgetMonth); b.setCategoryId(req.categoryId); b.setAmount(req.amount);
         return budgetRepo.save(b);
     }
