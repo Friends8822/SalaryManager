@@ -69,8 +69,9 @@ onMounted(async () => {
   nextTick(drawCharts)
 })
 
-function prevMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()-1, 1); store.loadAll().then(()=>nextTick(drawCharts)) }
-function nextMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()+1, 1); store.loadAll().then(()=>nextTick(drawCharts)) }
+function monthStr(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') }
+function prevMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()-1, 1); store.loadAll(monthStr(currentMonth.value)).then(()=>nextTick(drawCharts)) }
+function nextMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()+1, 1); store.loadAll(monthStr(currentMonth.value)).then(()=>nextTick(drawCharts)) }
 
 function exportCSV() {
   const exps = store.expenses; if (!exps.length) { alert('无记录'); return }

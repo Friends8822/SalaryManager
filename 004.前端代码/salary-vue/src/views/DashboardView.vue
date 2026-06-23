@@ -150,8 +150,9 @@ const budgetText = computed(() => {
   return b.isOver ? '本月已超支' : (b.isWarn ? `已用 ${b.progressPercent}%，注意控制哦` : `剩余 ¥${store.fmt(b.remaining)}`)
 })
 
-function prevMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()-1, 1); store.loadAll() }
-function nextMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()+1, 1); store.loadAll() }
+function monthStr(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') }
+function prevMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()-1, 1); store.loadAll(monthStr(currentMonth.value)) }
+function nextMonth() { currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth()+1, 1); store.loadAll(monthStr(currentMonth.value)) }
 
 function closeAdd() { showAddModal.value = false; editingId.value = null; selectedCatId.value = null; amount.value = ''; note.value = '' }
 function editExpense(e) { editingId.value = e.id; selectedCatId.value = e.categoryId; amount.value = e.amount; note.value = e.note||''; expenseDate.value = e.expenseDate; showAddModal.value = true }

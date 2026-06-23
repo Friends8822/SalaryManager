@@ -40,8 +40,8 @@ export const useAppStore = defineStore('app', {
       } catch (e) { localStorage.removeItem('fm_token') }
       return false
     },
-    async loadAll() {
-      const m = this.getCurrentMonth()
+    async loadAll(month) {
+      const m = month || this.getCurrentMonth()
       this.loading = true
       try {
         const [catRes, expRes, budRes, statsRes] = await Promise.all([
