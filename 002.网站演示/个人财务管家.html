@@ -25,6 +25,23 @@ max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);
 position:relative;box-shadow:0 0 60px rgba(126,200,80,0.15);
 }
 
+/* ===== AUTH PAGES ===== */
+.auth-page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px}
+.auth-logo{font-size:48px;margin-bottom:8px}
+.auth-title{font-size:28px;font-weight:800;color:var(--primary-dark);margin-bottom:4px}
+.auth-subtitle{font-size:14px;color:var(--text2);margin-bottom:32px}
+.auth-card{width:100%;background:var(--white);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow)}
+.auth-card .form-section{margin-bottom:16px}
+.auth-card .form-label{font-size:14px;font-weight:600;margin-bottom:6px;display:block;color:var(--text)}
+.auth-card .form-input{width:100%;padding:12px 14px;font-size:15px;border:2px solid var(--card);border-radius:var(--radius);outline:none;transition:all .2s;background:var(--white);color:var(--text);font-family:inherit}
+.auth-card .form-input:focus{border-color:var(--primary)}
+.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);border:none;border-radius:var(--radius);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(74,158,63,0.25);font-family:inherit;margin-top:4px}
+.auth-btn:hover{transform:translateY(-1px)}
+.auth-link{text-align:center;margin-top:16px;font-size:14px;color:var(--text2)}
+.auth-link a{color:var(--primary-dark);cursor:pointer;text-decoration:none;font-weight:600}
+.auth-link a:hover{text-decoration:underline}
+.auth-error{background:var(--danger);color:#fff;padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;display:none}
+
 /* ===== HEADER ===== */
 .header{
 background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
@@ -97,7 +114,7 @@ position:relative;overflow:hidden;
 .nav-item:hover{color:var(--primary-dark)}
 .nav-icon{font-size:20px}
 
-/* ===== MODAL OVERLAY (bottom sheet) ===== */
+/* ===== MODAL ===== */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;visibility:hidden;transition:all .3s}
 .modal-overlay.active{opacity:1;visibility:visible}
 .modal-content{background:var(--bg);width:100%;max-width:480px;border-radius:28px 28px 0 0;padding:24px 20px 36px;transform:translateY(100%);transition:transform .3s ease;max-height:85vh;overflow-y:auto}
@@ -151,14 +168,15 @@ position:relative;overflow:hidden;
 .toggle.on{background:var(--primary)}
 .toggle::after{content:'';position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .toggle.on::after{transform:translateX(20px)}
-
-/* Budget page */
 .back-header{display:flex;align-items:center;gap:12px;padding:16px 20px}
 .back-header button{background:var(--card);border:none;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text)}
 .back-header h2{font-size:18px;font-weight:700}
 .budget-input{width:100%!important;margin-top:8px}
 
-/* Dark mode */
+/* User info in header */
+.user-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.user-name{font-size:13px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:4px}
+
 @media(prefers-color-scheme:dark){
 :root{--bg:#1A1E19;--card:#252B23;--white:#222820;--text:#D4E0CE;--text2:#8A9A85;--shadow:0 2px 16px rgba(0,0,0,0.2)}
 body{background:#111510}
@@ -167,9 +185,56 @@ body{background:#111510}
 </head>
 <body>
 <div class="app-container" id="appContainer">
-  <!-- HEADER -->
+
+  <!-- ========== LOGIN PAGE ========== -->
+  <div class="auth-page page active" id="loginPage">
+    <div class="auth-logo">🌱</div>
+    <div class="auth-title">财务管家</div>
+    <div class="auth-subtitle">春日记账，轻松管理每一笔</div>
+    <div class="auth-card">
+      <div class="auth-error" id="loginError"></div>
+      <div class="form-section">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-input" id="loginUsername" placeholder="请输入用户名" autocomplete="username">
+      </div>
+      <div class="form-section">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      <button class="auth-btn" onclick="handleLogin()">登 录</button>
+      <div class="auth-link">还没有账号？<a onclick="showAuthPage('register')">立即注册</a></div>
+    </div>
+  </div>
+
+  <!-- ========== REGISTER PAGE ========== -->
+  <div class="auth-page page" id="registerPage">
+    <div class="auth-logo">🌱</div>
+    <div class="auth-title">创建账号</div>
+    <div class="auth-subtitle">开始你的春日记账之旅</div>
+    <div class="auth-card">
+      <div class="auth-error" id="registerError"></div>
+      <div class="form-section">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-input" id="regUsername" placeholder="请输入用户名（3-20位）" maxlength="20">
+      </div>
+      <div class="form-section">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-input" id="regPassword" placeholder="请输入密码（至少6位）" autocomplete="new-password">
+      </div>
+      <div class="form-section">
+        <label class="form-label">确认密码</label>
+        <input type="password" class="form-input" id="regPassword2" placeholder="请再次输入密码" autocomplete="new-password">
+      </div>
+      <button class="auth-btn" onclick="handleRegister()">注 册</button>
+      <div class="auth-link">已有账号？<a onclick="showAuthPage('login')">去登录</a></div>
+    </div>
+  </div>
+
+  <!-- ========== HEADER (hidden until logged in) ========== -->
+  <div id="appHeader" style="display:none">
   <div class="header">
     <div class="header-content">
+      <div class="user-bar"><span class="user-name">👤 <span id="displayName"></span></span><span style="font-size:12px;color:rgba(255,255,255,0.7);cursor:pointer" onclick="logout()">退出</span></div>
       <div class="app-title">🌱 财务管家</div>
       <div class="month-selector">
         <button class="month-btn" id="prevMonth">‹</button>
@@ -190,7 +255,7 @@ body{background:#111510}
   </div>
 
   <!-- HOME PAGE -->
-  <div class="main-content page active" id="homePage">
+  <div class="main-content page" id="homePage">
     <div class="card">
       <div class="section-title">📊 分类支出</div>
       <div class="cat-list" id="catList"></div>
@@ -224,8 +289,9 @@ body{background:#111510}
     </div>
     <div class="card" style="padding:0;overflow:hidden">
       <div class="set-row"><div class="s-left"><span class="s-icon" id="darkIcon">☀️</span>深色模式</div><button class="toggle" id="darkToggle" onclick="toggleDark()"></button></div>
+      <div class="set-row" onclick="logout()"><div class="s-left"><span class="s-icon">🚪</span>退出登录</div><div class="s-right">›</div></div>
     </div>
-    <div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">财务管家 V1.0 · 春日记账</div>
+    <div style="text-align:center;padding:20px;color:var(--text2);font-size:13px">财务管家 V1.1 · 春日记账</div>
   </div>
 
   <!-- BUDGET PAGE -->
@@ -253,14 +319,15 @@ body{background:#111510}
   </div>
 
   <!-- FAB -->
-  <button class="fab" id="addBtn" onclick="openAddModal()">+</button>
+  <button class="fab" id="addBtn" onclick="openAddModal()" style="display:none">+</button>
 
   <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" id="bottomNav" style="display:none">
     <button class="nav-item active" data-page="home"><span class="nav-icon">📊</span>首页</button>
     <button class="nav-item" data-page="stats"><span class="nav-icon">📈</span>统计</button>
     <button class="nav-item" data-page="settings"><span class="nav-icon">⚙️</span>设置</button>
   </nav>
+  </div><!-- end appHeader -->
 </div>
 
 <!-- ADD/EDIT MODAL -->
@@ -270,25 +337,10 @@ body{background:#111510}
       <h2 class="modal-title" id="modalTitle">记一笔</h2>
       <button class="modal-close" onclick="closeAddModal()">✕</button>
     </div>
-    <div class="form-section">
-      <label class="form-label">选择分类</label>
-      <div class="cat-grid" id="modalCatGrid"></div>
-    </div>
-    <div class="form-section">
-      <label class="form-label">金额</label>
-      <div class="amt-wrap">
-        <span class="amt-prefix">¥</span>
-        <input type="number" class="amt-input" id="amtInput" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
-      </div>
-    </div>
-    <div class="form-section">
-      <label class="form-label">日期</label>
-      <input type="date" class="form-input" id="dateInput">
-    </div>
-    <div class="form-section">
-      <label class="form-label">备注（可选）</label>
-      <input type="text" class="form-input" id="noteInput" placeholder="添加备注...">
-    </div>
+    <div class="form-section"><label class="form-label">选择分类</label><div class="cat-grid" id="modalCatGrid"></div></div>
+    <div class="form-section"><label class="form-label">金额</label><div class="amt-wrap"><span class="amt-prefix">¥</span><input type="number" class="amt-input" id="amtInput" placeholder="0.00" inputmode="decimal" step="0.01" min="0"></div></div>
+    <div class="form-section"><label class="form-label">日期</label><input type="date" class="form-input" id="dateInput"></div>
+    <div class="form-section"><label class="form-label">备注（可选）</label><input type="text" class="form-input" id="noteInput" placeholder="添加备注..."></div>
     <button class="submit-btn" onclick="submitExpense()" id="submitBtn">✓ 记一笔</button>
   </div>
 </div>
@@ -296,22 +348,10 @@ body{background:#111510}
 <!-- ADD CATEGORY MODAL -->
 <div class="modal-overlay" id="catModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">新增分类</h2>
-      <button class="modal-close" onclick="closeCatModal()">✕</button>
-    </div>
-    <div class="form-section">
-      <label class="form-label">名称（≤6个字）</label>
-      <input type="text" class="form-input" id="catNameInput" placeholder="分类名称" maxlength="6">
-    </div>
-    <div class="form-section">
-      <label class="form-label">图标</label>
-      <div class="cat-grid" id="emojiGrid"></div>
-    </div>
-    <div class="form-section">
-      <label class="form-label">颜色</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap" id="colorGrid"></div>
-    </div>
+    <div class="modal-header"><h2 class="modal-title">新增分类</h2><button class="modal-close" onclick="closeCatModal()">✕</button></div>
+    <div class="form-section"><label class="form-label">名称（≤6个字）</label><input type="text" class="form-input" id="catNameInput" placeholder="分类名称" maxlength="6"></div>
+    <div class="form-section"><label class="form-label">图标</label><div class="cat-grid" id="emojiGrid"></div></div>
+    <div class="form-section"><label class="form-label">颜色</label><div style="display:flex;gap:8px;flex-wrap:wrap" id="colorGrid"></div></div>
     <button class="submit-btn" onclick="submitCategory()">确定</button>
   </div>
 </div>
@@ -331,22 +371,101 @@ const PRESET_CATS = [
   {id:'cat_education',name:'教育',icon:'📚',color:'#74B9FF'},
   {id:'cat_other',name:'其他',icon:'📦',color:'#B2BEC3'},
 ];
-const EMOJIS='🍚🚗🛒🏠🎬💊📚📦☕🍕🎮✈️💇🎁📱🐱💻🎵📷🏋️💄🌿💰🔧'.split('');
-const COLORS=['#7EC850','#4ECDC4','#FFD93D','#6C5CE7','#A8E6CF','#FF8B94','#74B9FF','#B2BEC3','#F5A67F','#F2994A','#E8893A','#FF6B6B'];
 
 let state={
+  user:null,           // {id, username, passwordHash}
   cats:[],exps:[],buds:[],
   month:new Date(),page:'home',editingId:null,
   selCatId:'',selEmoji:'📦',selColor:'#7EC850',
 };
 
-// ==================== STORAGE ====================
-function load(){
-  var d=localStorage.getItem('fm_data');
+// ==================== AUTH ====================
+function userKey(uid){return 'fm_user_'+uid}
+
+async function hashPassword(pwd){
+  var enc=new TextEncoder().encode(pwd);
+  var buf=await crypto.subtle.digest('SHA-256',enc);
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+function getUsers(){try{var d=localStorage.getItem('fm_users');return d?JSON.parse(d):{}}catch(e){return{}}}
+function saveUsers(users){localStorage.setItem('fm_users',JSON.stringify(users))}
+function getSession(){try{var d=localStorage.getItem('fm_session');return d?JSON.parse(d):null}catch(e){return null}}
+function setSession(user){localStorage.setItem('fm_session',JSON.stringify(user))}
+function clearSession(){localStorage.removeItem('fm_session')}
+
+function showAuthPage(page){
+  document.getElementById('loginPage').classList.toggle('active',page==='login');
+  document.getElementById('registerPage').classList.toggle('active',page==='register');
+  document.getElementById('loginError').style.display='none';
+  document.getElementById('registerError').style.display='none';
+}
+
+async function handleRegister(){
+  var username=document.getElementById('regUsername').value.trim();
+  var pwd=document.getElementById('regPassword').value;
+  var pwd2=document.getElementById('regPassword2').value;
+  var err=document.getElementById('registerError');
+  if(!username||username.length<3){err.textContent='用户名至少3位';err.style.display='block';return}
+  if(!pwd||pwd.length<6){err.textContent='密码至少6位';err.style.display='block';return}
+  if(pwd!==pwd2){err.textContent='两次密码不一致';err.style.display='block';return}
+  var users=getUsers();
+  if(users[username]){err.textContent='用户名已存在';err.style.display='block';return}
+  var hash=await hashPassword(pwd);
+  users[username]={username:username,passwordHash:hash,createdAt:new Date().toISOString()};
+  saveUsers(users);
+  toast('注册成功，请登录','success');
+  document.getElementById('loginUsername').value=username;
+  showAuthPage('login');
+}
+
+async function handleLogin(){
+  var username=document.getElementById('loginUsername').value.trim();
+  var pwd=document.getElementById('loginPassword').value;
+  var err=document.getElementById('loginError');
+  if(!username||!pwd){err.textContent='请输入用户名和密码';err.style.display='block';return}
+  var users=getUsers();
+  var user=users[username];
+  if(!user){err.textContent='用户名不存在';err.style.display='block';return}
+  var hash=await hashPassword(pwd);
+  if(hash!==user.passwordHash){err.textContent='密码错误';err.style.display='block';return}
+  setSession(user);
+  state.user=user;
+  state.cats=[];state.exps=[];state.buds=[];
+  loadUserData();
+  enterApp();
+}
+
+function logout(){
+  if(!confirm('确定退出登录？'))return;
+  saveUserData();
+  clearSession();state.user=null;
+  state.cats=[];state.exps=[];state.buds=[];
+  document.getElementById('appHeader').style.display='none';
+  document.getElementById('addBtn').style.display='none';
+  document.getElementById('bottomNav').style.display='none';
+  document.querySelectorAll('.main-content.page').forEach(function(el){el.classList.remove('active')});
+  document.getElementById('loginPage').classList.add('active');
+  document.getElementById('loginUsername').value='';
+  document.getElementById('loginPassword').value='';
+  state.page='home';
+}
+
+// ==================== USER DATA STORAGE ====================
+function loadUserData(){
+  if(!state.user)return;
+  var key=userKey(state.user.username);
+  var d=localStorage.getItem(key);
   if(d){var p=JSON.parse(d);state.cats=p.cats||[];state.exps=p.exps||[];state.buds=p.buds||[]}
   if(!state.cats.length)state.cats=PRESET_CATS.map(function(c){return Object.assign({},c,{isPreset:true})});
 }
-function save(){localStorage.setItem('fm_data',JSON.stringify({cats:state.cats,exps:state.exps,buds:state.buds}))}
+function saveUserData(){
+  if(!state.user)return;
+  var key=userKey(state.user.username);
+  localStorage.setItem(key,JSON.stringify({cats:state.cats,exps:state.exps,buds:state.buds}));
+}
+
+// ==================== UTILS ====================
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,9)}
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function monthKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
@@ -357,16 +476,8 @@ function dateStr(s){var d=new Date(s);return(d.getMonth()+1)+'月'+d.getDate()+'
 function getCat(id){return state.cats.find(function(c){return c.id===id})||state.cats[0]||{icon:'📦',name:'其他',color:'#888'}}
 function monthExps(){var k=monthKey(state.month);return state.exps.filter(function(e){return e.date.startsWith(k)})}
 function monthTotal(){return monthExps().reduce(function(s,e){return s+e.amount},0)}
-function catBreakdown(){
-  var exps=monthExps(),total=exps.reduce(function(s,e){return s+e.amount},0);
-  var map={};exps.forEach(function(e){map[e.catId]=(map[e.catId]||0)+e.amount});
-  return Object.entries(map).map(function(e){var c=getCat(e[0]);return{cat:c,amt:e[1],pct:total>0?e[1]/total*100:0}}).sort(function(a,b){return b.amt-a.amt});
-}
-function budgetData(){
-  var k=monthKey(state.month);var b=state.buds.find(function(x){return x.month===k&&x.catId===null});
-  if(!b)return null;var s=monthTotal();var p=b.amt>0?s/b.amt*100:0;
-  return{amt:b.amt,spent:s,pct:p,rem:b.amt-s,over:s>=b.amt,warn:s>=b.amt*0.8&&s<b.amt};
-}
+function catBreakdown(){var exps=monthExps(),total=exps.reduce(function(s,e){return s+e.amount},0);var map={};exps.forEach(function(e){map[e.catId]=(map[e.catId]||0)+e.amount});return Object.entries(map).map(function(e){var c=getCat(e[0]);return{cat:c,amt:e[1],pct:total>0?e[1]/total*100:0}}).sort(function(a,b){return b.amt-a.amt})}
+function budgetData(){var k=monthKey(state.month);var b=state.buds.find(function(x){return x.month===k&&x.catId===null});if(!b)return null;var s=monthTotal();var p=b.amt>0?s/b.amt*100:0;return{amt:b.amt,spent:s,pct:p,rem:b.amt-s,over:s>=b.amt,warn:s>=b.amt*0.8&&s<b.amt}}
 
 // ==================== RENDER ====================
 function render(){
@@ -377,7 +488,7 @@ function render(){
 function renderOverview(){
   var t=monthTotal();var b=budgetData();
   document.getElementById('expenseTotal').textContent='¥'+fmt(t);
-  if(b){document.getElementById('budgetInfo').textContent='¥'+fmt(b.amt);}
+  if(b){document.getElementById('budgetInfo').textContent='¥'+fmt(b.amt)}
   else{document.getElementById('budgetInfo').textContent='未设置'}
 }
 function renderCatList(){
@@ -404,8 +515,7 @@ function renderBudgetBar(){
   barOuter.appendChild(barInner);
   var div3=document.createElement('div');div3.className='budget-info';
   var span3=document.createElement('span');span3.style.color=statusColor;span3.textContent=statusText;
-  div3.appendChild(span3);
-  el.appendChild(div1);el.appendChild(barOuter);el.appendChild(div3);
+  div3.appendChild(span3);el.appendChild(div1);el.appendChild(barOuter);el.appendChild(div3);
 }
 function renderTxnList(){
   var exps=monthExps().sort(function(a,b){return new Date(b.date)-new Date(a.date)}).slice(0,10);
@@ -433,7 +543,6 @@ function renderCharts(){
   var pieCtx=document.getElementById('pieChart');
   if(pieInst)pieInst.destroy();
   if(bd.length){pieInst=new Chart(pieCtx,{type:'doughnut',data:{labels:bd.map(function(b){return b.cat.name}),datasets:[{data:bd.map(function(b){return b.amt}),backgroundColor:bd.map(function(b){return b.cat.color}),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},padding:10}}}}})}
-
   var trendCtx=document.getElementById('trendChart');
   if(trendInst)trendInst.destroy();
   var exps=monthExps(),map={};exps.forEach(function(e){map[e.date]=(map[e.date]||0)+e.amount});
@@ -442,9 +551,24 @@ function renderCharts(){
 }
 
 // ==================== PAGES ====================
+function enterApp(){
+  document.getElementById('loginPage').classList.remove('active');
+  document.getElementById('registerPage').classList.remove('active');
+  document.getElementById('appHeader').style.display='block';
+  document.getElementById('addBtn').style.display='flex';
+  document.getElementById('bottomNav').style.display='flex';
+  document.getElementById('displayName').textContent=state.user.username;
+  document.getElementById('homePage').classList.add('active');
+  state.page='home';
+  document.querySelectorAll('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.page==='home')});
+  if(!state.exps.length){addDemoData()}
+  render();
+}
+
 function switchPage(p){
+  if(!state.user)return;
   state.page=p;state.editingId=null;
-  document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active')});
+  document.querySelectorAll('.main-content.page').forEach(function(el){el.classList.remove('active')});
   var map={home:'homePage',stats:'statsPage',settings:'settingsPage',budget:'budgetPage',categories:'categoriesPage',export:'exportPage'};
   var id=map[p];if(id)document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.page===(p==='budget'||p==='categories'||p==='export'?'settings':p))});
@@ -454,7 +578,6 @@ function switchPage(p){
   if(p==='categories')renderCatManage();
   if(p==='export')renderExport();
 }
-
 function showBudget(){switchPage('budget')}
 function showCategories(){switchPage('categories')}
 function showExport(){switchPage('export')}
@@ -465,143 +588,86 @@ function renderCatManage(){
     var row=document.createElement('div');row.className='set-row';
     var left=document.createElement('div');left.className='s-left';
     var span=document.createElement('span');span.style.cssText='width:32px;height:32px;border-radius:8px;background:'+cat.color+'22;display:flex;align-items:center;justify-content:center;font-size:18px';span.textContent=cat.icon;
-    left.appendChild(span);
-    left.appendChild(document.createTextNode(cat.name));
+    left.appendChild(span);left.appendChild(document.createTextNode(cat.name));
     var tag=document.createElement('small');tag.style.color='var(--text2)';tag.textContent=cat.isPreset?'预设':'自定义';
-    left.appendChild(tag);
-    row.appendChild(left);
-    if(!cat.isPreset){
-      var del=document.createElement('button');del.className='txn-del';del.textContent='删除';
-      del.onclick=function(){delCat(cat.id)};
-      row.appendChild(del);
-    }
+    left.appendChild(tag);row.appendChild(left);
+    if(!cat.isPreset){var del=document.createElement('button');del.className='txn-del';del.textContent='删除';del.onclick=function(){delCat(cat.id)};row.appendChild(del)}
     c.appendChild(row);
   });
 }
 function renderExport(){
   var c=document.getElementById('exportMonths'),now=new Date();c.innerHTML='';
-  for(var i=0;i<12;i++){
-    var d=new Date(now.getFullYear(),now.getMonth()-i,1),m=monthKey(d),cnt=state.exps.filter(function(e){return e.date.startsWith(m)}).length;
-    var row=document.createElement('div');row.className='set-row';
-    row.onclick=(function(month,cnt2){return function(){if(cnt2>0)exportCSV(month);else toast('该月无记录','error')}})(m,cnt);
-    var left=document.createElement('div');left.className='s-left';
-    var icon=document.createElement('span');icon.className='s-icon';icon.textContent='📅';
-    left.appendChild(icon);left.appendChild(document.createTextNode(monthLabel(d)));
-    var right=document.createElement('div');right.className='s-right';right.textContent=(cnt?cnt+' 条记录 ›':'无记录');
-    row.appendChild(left);row.appendChild(right);c.appendChild(row);
-  }
+  for(var i=0;i<12;i++){var d=new Date(now.getFullYear(),now.getMonth()-i,1),m=monthKey(d),cnt=state.exps.filter(function(e){return e.date.startsWith(m)}).length;(function(month,cnt2){var row=document.createElement('div');row.className='set-row';row.onclick=function(){if(cnt2>0)exportCSV(month);else toast('该月无记录','error')};var left=document.createElement('div');left.className='s-left';left.innerHTML='<span class="s-icon">📅</span>'+monthLabel(d);var right=document.createElement('div');right.className='s-right';right.textContent=(cnt2?cnt2+' 条记录 ›':'无记录');row.appendChild(left);row.appendChild(right);c.appendChild(row)})(m,cnt)}
 }
 
 // ==================== MODALS ====================
 function openAddModal(){
-  state.editingId=null;state.selCatId='';
-  document.getElementById('modalTitle').textContent='记一笔';
-  document.getElementById('amtInput').value='';
-  document.getElementById('noteInput').value='';
-  document.getElementById('dateInput').value=today();
-  document.getElementById('submitBtn').textContent='✓ 记一笔';
+  state.editingId=null;state.selCatId='';document.getElementById('modalTitle').textContent='记一笔';
+  document.getElementById('amtInput').value='';document.getElementById('noteInput').value='';
+  document.getElementById('dateInput').value=today();document.getElementById('submitBtn').textContent='✓ 记一笔';
   renderModalCats();document.getElementById('addModal').classList.add('active');
 }
-function editExpense(id){
-  var e=state.exps.find(function(x){return x.id===id});if(!e)return;
-  state.editingId=id;state.selCatId=e.catId;
-  document.getElementById('modalTitle').textContent='编辑记录';
-  document.getElementById('amtInput').value=e.amount;
-  document.getElementById('noteInput').value=e.note||'';
-  document.getElementById('dateInput').value=e.date;
-  document.getElementById('submitBtn').textContent='保存修改';
-  renderModalCats();document.getElementById('addModal').classList.add('active');
-}
+function editExpense(id){var e=state.exps.find(function(x){return x.id===id});if(!e)return;state.editingId=id;state.selCatId=e.catId;document.getElementById('modalTitle').textContent='编辑记录';document.getElementById('amtInput').value=e.amount;document.getElementById('noteInput').value=e.note||'';document.getElementById('dateInput').value=e.date;document.getElementById('submitBtn').textContent='保存修改';renderModalCats();document.getElementById('addModal').classList.add('active')}
 function closeAddModal(){document.getElementById('addModal').classList.remove('active')}
-function renderModalCats(){
-  var g=document.getElementById('modalCatGrid');g.innerHTML='';
-  state.cats.forEach(function(cat){
-    var btn=document.createElement('button');btn.className='cat-opt'+(state.selCatId===cat.id?' selected':'');
-    btn.onclick=function(){state.selCatId=cat.id;renderModalCats()};
-    var ico=document.createElement('span');ico.className='ico';ico.textContent=cat.icon;
-    var nam=document.createElement('span');nam.className='nam';nam.textContent=cat.name;
-    btn.appendChild(ico);btn.appendChild(nam);g.appendChild(btn);
-  });
-}
-function submitExpense(){
-  var amt=parseFloat(document.getElementById('amtInput').value);if(!amt||amt<=0){toast('请输入有效金额','error');return}
-  if(amt>99999999){toast('金额超出范围','error');return}
-  var catId=state.selCatId||state.cats[0].id;
-  if(state.editingId){var exp=state.exps.find(function(e){return e.id===state.editingId});exp.catId=catId;exp.amount=Math.round(amt*100)/100;exp.note=document.getElementById('noteInput').value;exp.date=document.getElementById('dateInput').value;exp.updatedAt=new Date().toISOString();toast('✓ 已更新','success')}
-  else{state.exps.unshift({id:uid(),catId:catId,amount:Math.round(amt*100)/100,note:document.getElementById('noteInput').value,date:document.getElementById('dateInput').value,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});toast('✓ 已记录','success')}
-  save();closeAddModal();render();
-}
-function delExpense(id,ev){ev.stopPropagation();if(confirm('确定删除？')){state.exps=state.exps.filter(function(e){return e.id!==id});save();render();toast('已删除')}}
+function renderModalCats(){var g=document.getElementById('modalCatGrid');g.innerHTML='';state.cats.forEach(function(cat){var btn=document.createElement('button');btn.className='cat-opt'+(state.selCatId===cat.id?' selected':'');btn.onclick=function(){state.selCatId=cat.id;renderModalCats()};var ico=document.createElement('span');ico.className='ico';ico.textContent=cat.icon;var nam=document.createElement('span');nam.className='nam';nam.textContent=cat.name;btn.appendChild(ico);btn.appendChild(nam);g.appendChild(btn)})}
+function submitExpense(){var amt=parseFloat(document.getElementById('amtInput').value);if(!amt||amt<=0){toast('请输入有效金额','error');return}if(amt>99999999){toast('金额超出范围','error');return}var catId=state.selCatId||state.cats[0].id;if(state.editingId){var exp=state.exps.find(function(e){return e.id===state.editingId});exp.catId=catId;exp.amount=Math.round(amt*100)/100;exp.note=document.getElementById('noteInput').value;exp.date=document.getElementById('dateInput').value;exp.updatedAt=new Date().toISOString();toast('✓ 已更新','success')}else{state.exps.unshift({id:uid(),catId:catId,amount:Math.round(amt*100)/100,note:document.getElementById('noteInput').value,date:document.getElementById('dateInput').value,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});toast('✓ 已记录','success')}saveUserData();closeAddModal();render()}
+function delExpense(id,ev){if(ev)ev.stopPropagation();if(confirm('确定删除？')){state.exps=state.exps.filter(function(e){return e.id!==id});saveUserData();render();toast('已删除')}}
 
-// Category modal
 function openAddCat(){state.selEmoji='📦';state.selColor='#7EC850';renderEmojiGrid();renderColorGrid();document.getElementById('catNameInput').value='';document.getElementById('catModal').classList.add('active')}
 function closeCatModal(){document.getElementById('catModal').classList.remove('active')}
-function renderEmojiGrid(){var g=document.getElementById('emojiGrid');g.innerHTML=EMOJIS.map(function(e){return'<button class="cat-opt'+(state.selEmoji===e?' selected':'')+'" onclick="state.selEmoji=\''+e+'\';renderEmojiGrid()"><span class="ico">'+e+'</span></button>'}).join('')}
-function renderColorGrid(){var g=document.getElementById('colorGrid');g.innerHTML=COLORS.map(function(c){return'<div style="width:28px;height:28px;border-radius:50%;background:'+c+';cursor:pointer;border:2px solid '+(state.selColor===c?'var(--text)':'transparent')+';transition:all .15s" onclick="state.selColor=\''+c+'\';renderColorGrid()"></div>'}).join('')}
-function submitCategory(){
-  var name=document.getElementById('catNameInput').value.trim();if(!name){toast('请输入分类名称','error');return}
-  state.cats.push({id:uid(),name:name.slice(0,6),icon:state.selEmoji,color:state.selColor,isPreset:false});
-  save();closeCatModal();renderCatManage();toast('✓ 分类已添加','success');
-}
-function delCat(id){if(confirm('删除此分类？记录将移入"其他"')){var other=state.cats.find(function(c){return c.isPreset&&c.name==='其他'})||state.cats[0];state.exps.forEach(function(e){if(e.catId===id)e.catId=other.id});state.cats=state.cats.filter(function(c){return c.id!==id});save();renderCatManage();render();toast('已删除')}}
+function renderEmojiGrid(){var g=document.getElementById('emojiGrid');g.innerHTML='';'🍚🚗🛒🏠🎬💊📚📦☕🍕🎮✈️💇🎁📱🐱💻🎵📷🏋️💄🌿💰🔧'.split('').forEach(function(e){var btn=document.createElement('button');btn.className='cat-opt'+(state.selEmoji===e?' selected':'');btn.onclick=function(){state.selEmoji=e;renderEmojiGrid()};btn.innerHTML='<span class="ico">'+e+'</span>';g.appendChild(btn)})}
+function renderColorGrid(){var g=document.getElementById('colorGrid');g.innerHTML='';['#7EC850','#4ECDC4','#FFD93D','#6C5CE7','#A8E6CF','#FF8B94','#74B9FF','#B2BEC3','#F5A67F','#F2994A','#E8893A','#FF6B6B'].forEach(function(c){var d=document.createElement('div');d.style.cssText='width:28px;height:28px;border-radius:50%;background:'+c+';cursor:pointer;border:2px solid '+(state.selColor===c?'var(--text)':'transparent')+';transition:all .15s';d.onclick=function(){state.selColor=c;renderColorGrid()};g.appendChild(d)})}
+function submitCategory(){var name=document.getElementById('catNameInput').value.trim();if(!name){toast('请输入分类名称','error');return}state.cats.push({id:uid(),name:name.slice(0,6),icon:state.selEmoji,color:state.selColor,isPreset:false});saveUserData();closeCatModal();renderCatManage();toast('✓ 分类已添加','success')}
+function delCat(id){if(confirm('删除此分类？记录将移入"其他"')){var other=state.cats.find(function(c){return c.isPreset&&c.name==='其他'})||state.cats[0];state.exps.forEach(function(e){if(e.catId===id)e.catId=other.id});state.cats=state.cats.filter(function(c){return c.id!==id});saveUserData();renderCatManage();render();toast('已删除')}}
 
 // ==================== BUDGET ====================
-function saveBudget(){
-  var v=parseFloat(document.getElementById('budgetAmtInput').value);if(!v||v<=0){toast('请输入预算金额','error');return}
-  var k=monthKey(state.month),idx=state.buds.findIndex(function(b){return b.month===k&&b.catId===null});
-  if(idx>=0)state.buds[idx].amt=v;else state.buds.push({id:uid(),month:k,catId:null,amt:v});
-  save();switchPage('home');toast('✓ 预算已保存','success');
-}
+function saveBudget(){var v=parseFloat(document.getElementById('budgetAmtInput').value);if(!v||v<=0){toast('请输入预算金额','error');return}var k=monthKey(state.month),idx=state.buds.findIndex(function(b){return b.month===k&&b.catId===null});if(idx>=0)state.buds[idx].amt=v;else state.buds.push({id:uid(),month:k,catId:null,amt:v});saveUserData();switchPage('home');toast('✓ 预算已保存','success')}
 
 // ==================== EXPORT ====================
-function exportCSV(m){
-  var month=m||monthKey(state.month),exps=state.exps.filter(function(e){return e.date.startsWith(month)}).sort(function(a,b){return b.date.localeCompare(a.date)});
-  if(!exps.length){toast('该月无记录','error');return}
-  var csv='﻿日期,分类,金额,备注\n'+exps.map(function(e){return e.date+','+getCat(e.catId).name+',-'+e.amount.toFixed(2)+','+(e.note||'')}).join('\n');
-  var b=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='财务管家_'+month+'.csv';a.click();toast('✓ 导出成功','success');
-}
+function exportCSV(m){var month=m||monthKey(state.month),exps=state.exps.filter(function(e){return e.date.startsWith(month)}).sort(function(a,b){return b.date.localeCompare(a.date)});if(!exps.length){toast('该月无记录','error');return}var csv='﻿日期,分类,金额,备注\n'+exps.map(function(e){return e.date+','+getCat(e.catId).name+',-'+e.amount.toFixed(2)+','+(e.note||'')}).join('\n');var b=new Blob([csv],{type:'text/csv;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='财务管家_'+month+'.csv';a.click();toast('✓ 导出成功','success')}
 
 // ==================== DARK ====================
 function toggleDark(){
   var isDark=document.documentElement.style.getPropertyValue('--bg')==='#1A1E19';
-  if(isDark){
-    document.documentElement.style.setProperty('--bg','#F7FBF4');document.documentElement.style.setProperty('--card','#EDF6E5');
-    document.documentElement.style.setProperty('--white','#fff');document.documentElement.style.setProperty('--text','#3D4A3B');
-    document.documentElement.style.setProperty('--text2','#7A8A75');document.documentElement.style.setProperty('--shadow','0 2px 16px rgba(0,0,0,0.06)');
-    document.body.style.background='#eef5e8';document.getElementById('darkIcon').textContent='☀️';
-    document.getElementById('darkToggle').classList.remove('on');
-  }else{
-    document.documentElement.style.setProperty('--bg','#1A1E19');document.documentElement.style.setProperty('--card','#252B23');
-    document.documentElement.style.setProperty('--white','#222820');document.documentElement.style.setProperty('--text','#D4E0CE');
-    document.documentElement.style.setProperty('--text2','#8A9A85');document.documentElement.style.setProperty('--shadow','0 2px 16px rgba(0,0,0,0.2)');
-    document.body.style.background='#111510';document.getElementById('darkIcon').textContent='🌙';
-    document.getElementById('darkToggle').classList.add('on');
-  }
+  if(isDark){document.documentElement.style.setProperty('--bg','#F7FBF4');document.documentElement.style.setProperty('--card','#EDF6E5');document.documentElement.style.setProperty('--white','#fff');document.documentElement.style.setProperty('--text','#3D4A3B');document.documentElement.style.setProperty('--text2','#7A8A75');document.documentElement.style.setProperty('--shadow','0 2px 16px rgba(0,0,0,0.06)');document.body.style.background='#eef5e8';document.getElementById('darkIcon').textContent='☀️';document.getElementById('darkToggle').classList.remove('on')}
+  else{document.documentElement.style.setProperty('--bg','#1A1E19');document.documentElement.style.setProperty('--card','#252B23');document.documentElement.style.setProperty('--white','#222820');document.documentElement.style.setProperty('--text','#D4E0CE');document.documentElement.style.setProperty('--text2','#8A9A85');document.documentElement.style.setProperty('--shadow','0 2px 16px rgba(0,0,0,0.2)');document.body.style.background='#111510';document.getElementById('darkIcon').textContent='🌙';document.getElementById('darkToggle').classList.add('on')}
   render();if(state.page==='stats')setTimeout(renderCharts,100);
 }
 
 // ==================== TOAST ====================
-function toast(msg,type){
-  var t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type?' '+type:'');
-  setTimeout(function(){t.classList.add('show')},100);
-  setTimeout(function(){t.classList.remove('show')},2500);
+function toast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type?' '+type:'');setTimeout(function(){t.classList.add('show')},100);setTimeout(function(){t.classList.remove('show')},2500)}
+
+// ==================== DEMO DATA ====================
+function addDemoData(){
+  var now=new Date(),y=now.getFullYear(),m=now.getMonth();
+  [{d:15,c:'cat_food',a:35,n:'午餐'},{d:15,c:'cat_transport',a:6,n:'地铁'},{d:14,c:'cat_shopping',a:128.5,n:'超市采购'},{d:14,c:'cat_food',a:18,n:'咖啡'},{d:13,c:'cat_housing',a:199,n:'话费'},{d:12,c:'cat_food',a:42,n:'晚餐'},{d:12,c:'cat_entertainment',a:80,n:'电影'},{d:11,c:'cat_transport',a:25,n:'打车'},{d:10,c:'cat_food',a:28,n:'午餐'},{d:9,c:'cat_shopping',a:256,n:'网购'},{d:8,c:'cat_medical',a:68,n:'买药'},{d:7,c:'cat_food',a:32,n:'午餐'},{d:6,c:'cat_education',a:199,n:'课程'},{d:5,c:'cat_transport',a:12,n:'地铁'},{d:5,c:'cat_food',a:45,n:'火锅'}].forEach(function(s){state.exps.push({id:uid(),catId:s.c,amount:s.a,note:s.n,date:y+'-'+String(m+1).padStart(2,'0')+'-'+String(s.d).padStart(2,'0'),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()})});
+  saveUserData();
 }
 
 // ==================== INIT ====================
 function init(){
-  load();
-  // Check system dark mode
+  // Check dark mode
   if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches){var d=document.documentElement.style;d.setProperty('--bg','#1A1E19');d.setProperty('--card','#252B23');d.setProperty('--white','#222820');d.setProperty('--text','#D4E0CE');d.setProperty('--text2','#8A9A85');d.setProperty('--shadow','0 2px 16px rgba(0,0,0,0.2)');document.body.style.background='#111510';document.getElementById('darkIcon').textContent='🌙';document.getElementById('darkToggle').classList.add('on')}
+
+  // Check existing session
+  var session=getSession();
+  if(session){
+    state.user=session;
+    loadUserData();
+    enterApp();
+    return;
+  }
+
+  // Show login
+  showAuthPage('login');
+  // Enter key support
+  document.getElementById('loginPassword').addEventListener('keydown',function(e){if(e.key==='Enter')handleLogin()});
+  document.getElementById('regPassword2').addEventListener('keydown',function(e){if(e.key==='Enter')handleRegister()});
+
+  // Nav
   document.querySelectorAll('.nav-item').forEach(function(b){b.addEventListener('click',function(){switchPage(b.dataset.page)})});
   document.getElementById('prevMonth').addEventListener('click',function(){state.month.setMonth(state.month.getMonth()-1);render()});
   document.getElementById('nextMonth').addEventListener('click',function(){state.month.setMonth(state.month.getMonth()+1);render()});
-  // Demo data
-  if(!state.exps.length){
-    var now=new Date(),y=now.getFullYear(),m=now.getMonth();
-    [{d:15,c:'cat_food',a:35,n:'午餐'},{d:15,c:'cat_transport',a:6,n:'地铁'},{d:14,c:'cat_shopping',a:128.5,n:'超市采购'},{d:14,c:'cat_food',a:18,n:'咖啡'},{d:13,c:'cat_housing',a:199,n:'话费'},{d:12,c:'cat_food',a:42,n:'晚餐'},{d:12,c:'cat_entertainment',a:80,n:'电影'},{d:11,c:'cat_transport',a:25,n:'打车'},{d:10,c:'cat_food',a:28,n:'午餐'},{d:9,c:'cat_shopping',a:256,n:'网购'},{d:8,c:'cat_medical',a:68,n:'买药'},{d:7,c:'cat_food',a:32,n:'午餐'},{d:6,c:'cat_education',a:199,n:'课程'},{d:5,c:'cat_transport',a:12,n:'地铁'},{d:5,c:'cat_food',a:45,n:'火锅'}].forEach(function(s){state.exps.push({id:uid(),catId:s.c,amount:s.a,note:s.n,date:y+'-'+String(m+1).padStart(2,'0')+'-'+String(s.d).padStart(2,'0'),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()})});
-    save();
-  }
-  render();
 }
 init();
 </script>
