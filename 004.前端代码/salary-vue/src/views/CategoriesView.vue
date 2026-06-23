@@ -51,7 +51,7 @@ onMounted(async () => {
 })
 
 async function addCat() {
-  if (!newName.value.trim()) { store.showToast('请输入分类名称', 'error') return }
+  if (!newName.value.trim()) { store.showToast('请输入分类名称', 'error'); return }
   try {
     await store.addCategory({ name: newName.value.trim().slice(0,6), icon: newIcon.value, color: '#7EC850' })
     showForm.value = false; newName.value = ''; newIcon.value = '📦'

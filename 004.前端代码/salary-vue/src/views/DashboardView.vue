@@ -159,7 +159,7 @@ function editExpense(e) { editingId.value = e.id; selectedCatId.value = e.catego
 
 async function submit() {
   const amt = parseFloat(amount.value)
-  if (!amt || amt <= 0) { store.showToast('请输入有效金额', 'error') return }
+  if (!amt || amt <= 0) { store.showToast('请输入有效金额', 'error'); return }
   submitting.value = true
   try {
     const data = { categoryId: selectedCatId.value || store.categories[0]?.id, amount: Math.round(amt*100)/100, note: note.value, expenseDate: expenseDate.value }

@@ -32,7 +32,7 @@ onMounted(async () => {
 
 async function save() {
   const v = parseFloat(amount.value)
-  if (!v || v <= 0) { store.showToast('请输入预算金额', 'error') return }
+  if (!v || v <= 0) { store.showToast('请输入预算金额', 'error'); return }
   saving.value = true
   try { await store.saveBudget(v); router.push('/settings') } catch(e) { store.showToast(e.message, 'error') }
   finally { saving.value = false }
