@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>register</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "bg-dark": "#1A1E19",
+                "on-surface": "#111f10",
+                "status-error": "#FF8B94",
+                "error": "#ba1a1a",
+                "outline-variant": "#c1cab5",
+                "surface-container-lowest": "#ffffff",
+                "brand-primary-dark": "#8ED860",
+                "surface": "#edfee5",
+                "on-tertiary-fixed": "#00201e",
+                "on-secondary-fixed-variant": "#3d4a3b",
+                "tertiary": "#006a65",
+                "on-primary-container": "#215100",
+                "outline": "#717a68",
+                "surface-container-low": "#e7f9e0",
+                "tertiary-container": "#48c8bf",
+                "primary-fixed": "#a9f778",
+                "on-tertiary": "#ffffff",
+                "surface-container-high": "#dcedd5",
+                "on-error-container": "#93000a",
+                "surface-dim": "#cedfc7",
+                "on-secondary-fixed": "#131e12",
+                "tertiary-fixed-dim": "#5dd9d0",
+                "category-shopping": "#FFD93D",
+                "bg-light": "#F7FBF4",
+                "inverse-surface": "#263423",
+                "on-tertiary-fixed-variant": "#00504c",
+                "on-primary-fixed-variant": "#215100",
+                "surface-variant": "#d6e8cf",
+                "on-surface-variant": "#41493a",
+                "on-primary-fixed": "#092100",
+                "surface-bright": "#edfee5",
+                "primary-fixed-dim": "#8eda5f",
+                "error-container": "#ffdad6",
+                "card-bg-light": "#EDF6E5",
+                "category-fun": "#A8E6CF",
+                "on-error": "#ffffff",
+                "inverse-on-surface": "#e5f6dd",
+                "background": "#edfee5",
+                "secondary": "#556252",
+                "on-background": "#111f10",
+                "tertiary-fixed": "#7cf6ec",
+                "surface-tint": "#2e6c00",
+                "secondary-fixed-dim": "#bccbb7",
+                "inverse-primary": "#8eda5f",
+                "category-housing": "#6C5CE7",
+                "surface-container": "#e2f3da",
+                "on-primary": "#ffffff",
+                "secondary-fixed": "#d8e7d2",
+                "on-tertiary-container": "#00504c",
+                "on-secondary-container": "#5a6858",
+                "surface-container-highest": "#d6e8cf",
+                "card-bg-dark": "#252B23",
+                "secondary-container": "#d8e7d2",
+                "on-secondary": "#ffffff",
+                "primary-container": "#7ec850",
+                "primary": "#2e6c00"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "section-gap": "24px",
+                "base": "4px",
+                "touch-target": "44px",
+                "container-margin": "20px",
+                "gutter": "12px",
+                "card-padding": "16px"
+        },
+        "fontFamily": {
+                "label-sm": ["Hanken Grotesk"],
+                "display-amount": ["Hanken Grotesk"],
+                "body-lg": ["Hanken Grotesk"],
+                "display-amount-mobile": ["Hanken Grotesk"],
+                "headline-md": ["Hanken Grotesk"],
+                "headline-lg": ["Hanken Grotesk"],
+                "body-md": ["Hanken Grotesk"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100dvh;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sprout-float {
+            animation: sprout-float 4s ease-in-out infinite;
+        }
+        @keyframes sprout-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+        .input-focus-ring:focus-within {
+            border-color: #2e6c00;
+            box-shadow: 0 0 0 3px rgba(46, 108, 0, 0.1);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .animate-shake {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+        .soft-elevation {
+            box-shadow: 0 4px 20px -2px rgba(46, 108, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background flex flex-col items-center overflow-x-hidden">
+<!-- Atmospheric Background Decoration -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-80 h-80 bg-secondary-container/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-50 flex justify-between items-center px-container-margin h-touch-target bg-background/80 backdrop-blur-sm">
+<button class="flex items-center justify-center w-touch-target h-touch-target text-on-surface hover:bg-surface-container-low transition-colors rounded-full active:scale-95" onclick="window.location.href='{{DATA:SCREEN:SCREEN_9}}';">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="font-bold text-primary text-headline-lg">财务管家</div>
+<div class="w-touch-target"></div>
+</header>
+<main class="w-full max-w-md px-container-margin py-6 flex-1 flex flex-col relative z-10">
+<!-- Hero Branding Section -->
+<div class="flex flex-col items-center text-center mb-8">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6 sprout-float soft-elevation border border-primary/10">
+<span class="material-symbols-outlined text-on-primary-container text-[40px]">eco</span>
+</div>
+<h1 class="text-on-background font-bold text-[28px] leading-[36px] mb-2">开启记账之旅</h1>
+<p class="text-on-surface-variant text-body-md">开启您的春季理财计划，让财富自然生长</p>
+</div>
+<!-- Registration Form Card -->
+<section class="bg-card-bg-light/80 backdrop-blur-sm p-card-padding rounded-xl border border-outline-variant/30 soft-elevation mb-6" id="registration-card">
+<div class="space-y-5">
+<!-- Username Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="username">用户名</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">person</span>
+<input class="w-full h-touch-target pl-10 pr-4 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="username" placeholder="请输入您的用户名" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="password">密码</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">lock</span>
+<input class="w-full h-touch-target pl-10 pr-12 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="password" placeholder="设置您的登录密码" type="password"/>
+<button class="absolute right-3 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword('password')" type="button">
+<span class="material-symbols-outlined" id="eye-password">visibility</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="confirm-password">确认密码</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">verified_user</span>
+<input class="w-full h-touch-target pl-10 pr-12 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="confirm-password" placeholder="再次输入密码" type="password"/>
+<button class="absolute right-3 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword('confirm-password')" type="button">
+<span class="material-symbols-outlined" id="eye-confirm-password">visibility</span>
+</button>
+</div>
+</div>
+<!-- Error Message Area -->
+<div class="hidden" id="error-message">
+<div class="bg-error-container text-on-error-container px-4 py-2.5 rounded-lg flex items-center gap-2 text-label-sm">
+<span class="material-symbols-outlined text-[18px]">error</span>
+<span id="error-text">信息有误，请重试。</span>
+</div>
+</div>
+<!-- Terms & Privacy -->
+<div class="flex items-start gap-2 px-1">
+<input class="mt-1 w-4 h-4 rounded border-outline text-primary focus:ring-primary focus:ring-offset-0 transition-colors" id="terms" type="checkbox"/>
+<label class="text-on-surface-variant text-[12px] leading-[16px]" for="terms">
+                        我已阅读并同意 <a class="text-primary font-semibold hover:underline" href="#" onclick="alert('正在加载服务条款...'); return false;">服务条款</a> 和 <a class="text-primary font-semibold hover:underline" href="#" onclick="alert('正在加载隐私政策...'); return false;">隐私政策</a>
+</label>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-primary text-on-primary h-12 rounded-full font-semibold text-body-lg shadow-lg active:scale-95 transition-all duration-200 hover:opacity-90 flex items-center justify-center gap-2" id="register-btn" onclick="handleRegistration()">
+                    立即注册
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Social Alternative -->
+<div class="flex flex-col items-center gap-4">
+<p class="text-outline text-[12px]">或者通过以下方式快速注册</p>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-secondary-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-secondary-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</div>
+<!-- Footer Link -->
+<div class="mt-auto pt-8 text-center pb-4">
+<p class="text-on-surface-variant text-body-md">
+                已有账号？ <a class="text-primary font-bold hover:underline transition-colors" href="{{DATA:SCREEN:SCREEN_9}}">立即登录</a>
+</p>
+</div>
+</main>
+<!-- Bottom Illustration Decoration -->
+<div class="fixed bottom-0 left-0 w-full h-24 pointer-events-none opacity-30 flex items-end justify-around px-8">
+<span class="material-symbols-outlined text-primary text-[40px]">grass</span>
+<span class="material-symbols-outlined text-primary text-[28px] translate-y-2">eco</span>
+<span class="material-symbols-outlined text-primary text-[48px]">nature_people</span>
+<span class="material-symbols-outlined text-primary text-[20px] translate-y-1">potted_plant</span>
+</div>
+<script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(`eye-${inputId}`);
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                eyeIcon.textContent = 'visibility';
+            }
+        }
+
+        function showError(message) {
+            const errorArea = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const card = document.getElementById('registration-card');
+            
+            errorText.textContent = message;
+            errorArea.classList.remove('hidden');
+            card.classList.add('animate-shake');
+            setTimeout(() => card.classList.remove('animate-shake'), 400);
+        }
+
+        function handleRegistration() {
+            const username = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            const termsChecked = document.getElementById('terms').checked;
+            const btn = document.getElementById('register-btn');
+
+            // Reset error
+            document.getElementById('error-message').classList.add('hidden');
+
+            // Validation
+            if (!username || !pass || !confirmPass) {
+                showError('请填写所有必填信息');
+                return;
+            }
+            if (pass !== confirmPass) {
+                showError('两次输入的密码不一致');
+                return;
+            }
+            if (pass.length < 6) {
+                showError('密码长度不能少于6位');
+                return;
+            }
+            if (!termsChecked) {
+                showError('请先同意服务条款');
+                return;
+            }
+
+            // Mock Submission
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> 注册中...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert('注册成功！正在为您跳转到登录页面。');
+                // Target navigation after mock success
+                window.location.href = '{{DATA:SCREEN:SCREEN_9}}';
+            }, 1500);
+        }
+    </script>
+</body></html>

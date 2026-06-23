@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>records</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#5dd9d0",
+                    "on-surface-variant": "#41493a",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#a9f778",
+                    "on-surface": "#111f10",
+                    "surface-container-highest": "#d6e8cf",
+                    "background": "#edfee5",
+                    "bg-dark": "#1A1E19",
+                    "on-secondary-fixed": "#131e12",
+                    "secondary-fixed-dim": "#bccbb7",
+                    "on-primary-fixed": "#092100",
+                    "on-secondary-fixed-variant": "#3d4a3b",
+                    "surface-container": "#e2f3da",
+                    "surface-container-high": "#dcedd5",
+                    "tertiary-fixed": "#7cf6ec",
+                    "surface-tint": "#2e6c00",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#e7f9e0",
+                    "primary-container": "#7ec850",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263423",
+                    "on-error": "#ffffff",
+                    "card-bg-dark": "#252B23",
+                    "primary": "#2e6c00",
+                    "outline-variant": "#c1cab5",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface": "#edfee5",
+                    "on-secondary-container": "#5a6858",
+                    "secondary-fixed": "#d8e7d2",
+                    "on-background": "#111f10",
+                    "status-error": "#FF8B94",
+                    "category-housing": "#6C5CE7",
+                    "tertiary": "#006a65",
+                    "brand-primary-dark": "#8ED860",
+                    "on-primary-fixed-variant": "#215100",
+                    "surface-bright": "#edfee5",
+                    "category-shopping": "#FFD93D",
+                    "on-tertiary-fixed": "#00201e",
+                    "category-fun": "#A8E6CF",
+                    "secondary": "#556252",
+                    "surface-dim": "#cedfc7",
+                    "surface-variant": "#d6e8cf",
+                    "inverse-primary": "#8eda5f",
+                    "on-tertiary-fixed-variant": "#00504c",
+                    "secondary-container": "#d8e7d2",
+                    "on-primary-container": "#215100",
+                    "primary-fixed-dim": "#8eda5f",
+                    "on-tertiary-container": "#00504c",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#48c8bf",
+                    "inverse-on-surface": "#e5f6dd",
+                    "card-bg-light": "#EDF6E5",
+                    "outline": "#717a68",
+                    "bg-light": "#F7FBF4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "24px",
+                    "container-margin": "20px",
+                    "touch-target": "44px",
+                    "gutter": "12px",
+                    "base": "4px",
+                    "card-padding": "16px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "display-amount": ["Hanken Grotesk"],
+                    "display-amount-mobile": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-amount": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-amount-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #F7FBF4;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .swipe-action {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .record-item:active .swipe-action {
+            transform: translateX(-60px);
+        }
+        .ios-safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</head>
+<body class="bg-bg-light text-on-surface">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-container-margin h-touch-target">
+<button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">records</h1>
+<button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</header>
+<main class="pb-32">
+<!-- Month Selector -->
+<section class="px-container-margin py-4 flex items-center gap-2">
+<button class="flex items-center gap-1 active:scale-95 transition-transform">
+<span class="font-headline-lg text-on-surface">4月</span>
+<span class="font-body-md text-on-surface-variant">2024年</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="expand_more">expand_more</span>
+</button>
+</section>
+<!-- Category Filter Chips -->
+<nav class="flex overflow-x-auto no-scrollbar gap-gutter px-container-margin py-2">
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-primary text-on-primary font-label-sm active:scale-95 transition-transform duration-200">全部</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">餐饮</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">交通</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">购物</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">娱乐</button>
+</nav>
+<!-- Records List -->
+<div class="space-y-6 mt-4">
+<!-- Date Group 1 -->
+<section>
+<header class="px-container-margin flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface">4月22日</span>
+<span class="font-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">周三</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">支出</span>
+<span class="font-body-lg font-bold text-on-surface">¥53.00</span>
+</div>
+</header>
+<div class="space-y-1">
+<!-- Item 1 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-fun/10 flex items-center justify-center text-[22px]">🍚</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">午餐</h4>
+<p class="font-label-sm text-on-surface-variant">12:30 · 美食广场</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥35.00</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-shopping/10 flex items-center justify-center text-[22px]">☕</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">拿铁咖啡</h4>
+<p class="font-label-sm text-on-surface-variant">14:15 · 星巴克</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥18.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Date Group 2 -->
+<section>
+<header class="px-container-margin flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface">4月21日</span>
+<span class="font-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">周二</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">支出</span>
+<span class="font-body-lg font-bold text-on-surface">¥128.50</span>
+</div>
+</header>
+<div class="space-y-1">
+<!-- Item 3 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-housing/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-housing" data-icon="commute">commute</span>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">滴滴打车</h4>
+<p class="font-label-sm text-on-surface-variant">08:45 · 加班回家</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥42.50</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">超市购物</h4>
+<p class="font-label-sm text-on-surface-variant">19:30 · 盒马鲜生</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥86.00</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" onclick="window.location.href='{{DATA:SCREEN:SCREEN_6}}'">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/10 ios-safe-bottom z-50">
+<div class="flex justify-around items-center h-16 px-4">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="{{DATA:SCREEN:SCREEN_10}}">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-semibold active:scale-95" href="{{DATA:SCREEN:SCREEN_14}}">
+<div class="bg-primary-container/30 px-6 py-1 rounded-full mb-0.5">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<span class="font-label-sm">统计</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="{{DATA:SCREEN:SCREEN_19}}">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm">设置</span>
+</a>
+</div>
+</nav>
+<script>
+        // Micro-interactions for Record Items
+        document.querySelectorAll('.record-item').forEach(item => {
+            let startX;
+            const content = item.querySelector('.swipe-action');
+            
+            item.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, {passive: true});
+
+            item.addEventListener('touchmove', (e) => {
+                let currentX = e.touches[0].clientX;
+                let diff = startX - currentX;
+                if (diff > 0 && diff < 120) {
+                    content.style.transform = `translateX(-${diff}px)`;
+                }
+            }, {passive: true});
+
+            item.addEventListener('touchend', (e) => {
+                let endX = e.changedTouches[0].clientX;
+                if (startX - endX > 60) {
+                    content.style.transform = `translateX(-64px)`;
+                } else {
+                    content.style.transform = `translateX(0px)`;
+                }
+            });
+            
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.swipe-action').forEach(el => {
+                    if (el !== content) el.style.transform = 'translateX(0px)';
+                });
+            });
+        });
+
+        // Filter chips active state
+        const chips = document.querySelectorAll('nav button');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                chip.classList.add('bg-primary', 'text-on-primary');
+            });
+        });
+    </script>
+</body></html>

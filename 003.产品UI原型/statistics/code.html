@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>statistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #F7FBF4;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dcedd5;
+            border-radius: 10px;
+        }
+        .chart-ring {
+            transition: stroke-dashoffset 1s ease-out;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(46, 108, 0, 0.05);
+        }
+    </style>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "bg-dark": "#1A1E19",
+                        "on-surface": "#111f10",
+                        "status-error": "#FF8B94",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c1cab5",
+                        "surface-container-lowest": "#ffffff",
+                        "brand-primary-dark": "#8ED860",
+                        "surface": "#edfee5",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-secondary-fixed-variant": "#3d4a3b",
+                        "tertiary": "#006a65",
+                        "on-primary-container": "#215100",
+                        "outline": "#717a68",
+                        "surface-container-low": "#e7f9e0",
+                        "tertiary-container": "#48c8bf",
+                        "primary-fixed": "#a9f778",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#dcedd5",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cedfc7",
+                        "on-secondary-fixed": "#131e12",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "category-shopping": "#FFD93D",
+                        "bg-light": "#F7FBF4",
+                        "inverse-surface": "#263423",
+                        "on-tertiary-fixed-variant": "#00504c",
+                        "on-primary-fixed-variant": "#215100",
+                        "surface-variant": "#d6e8cf",
+                        "on-surface-variant": "#41493a",
+                        "on-primary-fixed": "#092100",
+                        "surface-bright": "#edfee5",
+                        "primary-fixed-dim": "#8eda5f",
+                        "error-container": "#ffdad6",
+                        "card-bg-light": "#EDF6E5",
+                        "category-fun": "#A8E6CF",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#e5f6dd",
+                        "background": "#edfee5",
+                        "secondary": "#556252",
+                        "on-background": "#111f10",
+                        "tertiary-fixed": "#7cf6ec",
+                        "surface-tint": "#2e6c00",
+                        "secondary-fixed-dim": "#bccbb7",
+                        "inverse-primary": "#8eda5f",
+                        "category-housing": "#6C5CE7",
+                        "surface-container": "#e2f3da",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d8e7d2",
+                        "on-tertiary-container": "#00504c",
+                        "on-secondary-container": "#5a6858",
+                        "surface-container-highest": "#d6e8cf",
+                        "card-bg-dark": "#252B23",
+                        "secondary-container": "#d8e7d2",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#7ec850",
+                        "primary": "#2e6c00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "24px",
+                        "base": "4px",
+                        "touch-target": "44px",
+                        "container-margin": "20px",
+                        "gutter": "12px",
+                        "card-padding": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Hanken Grotesk"],
+                        "display-amount": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-amount-mobile": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                        "display-amount": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-amount-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-bg-light text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-bg-light flex justify-between items-center px-container-margin h-touch-target">
+<div class="flex items-center gap-2">
+<button class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">财务管家</h1>
+</div>
+<div class="flex items-center gap-1">
+<button class="flex items-center gap-1 px-3 py-2 rounded-full text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span class="text-label-sm font-label-sm">导出CSV</span>
+</button>
+<button class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-md mx-auto px-container-margin space-y-section-gap pt-4">
+<!-- Month Selector Card -->
+<section class="flex items-center justify-between bg-card-bg-light p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/50 text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">2024年 5月</span>
+<span class="text-headline-md font-headline-md text-primary font-bold">本月总支出</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/50 text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</section>
+<!-- Donut Chart Hero -->
+<section class="flex flex-col items-center justify-center py-4">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- SVG Ring Chart -->
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle cx="50" cy="50" fill="transparent" r="42" stroke="#E2F3DA" stroke-width="12"></circle>
+<!-- Shopping 45% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#FFD93D" stroke-dasharray="263.89" stroke-dashoffset="145.14" stroke-width="12"></circle>
+<!-- Housing 25% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#6C5CE7" stroke-dasharray="263.89" stroke-dashoffset="197.92" stroke-width="12" style="transform-origin: center; transform: rotate(162deg);"></circle>
+<!-- Fun 15% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#A8E6CF" stroke-dasharray="263.89" stroke-dashoffset="224.31" stroke-width="12" style="transform-origin: center; transform: rotate(252deg);"></circle>
+<!-- Others 15% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#556252" stroke-dasharray="263.89" stroke-dashoffset="224.31" stroke-width="12" style="transform-origin: center; transform: rotate(306deg);"></circle>
+</svg>
+<!-- Central Label -->
+<div class="absolute flex flex-col items-center">
+<span class="text-body-md font-body-md text-on-surface-variant">总额</span>
+<span class="text-display-amount-mobile font-display-amount-mobile text-on-background">¥8,432</span>
+</div>
+</div>
+<!-- Quick Legend -->
+<div class="grid grid-cols-2 gap-4 mt-8 w-full">
+<div class="flex items-center gap-2 p-3 bg-surface-container-lowest/60 rounded-lg border border-outline-variant/10">
+<div class="w-3 h-3 rounded-full bg-category-shopping"></div>
+<span class="text-label-sm font-label-sm">购物 45%</span>
+</div>
+<div class="flex items-center gap-2 p-3 bg-surface-container-lowest/60 rounded-lg border border-outline-variant/10">
+<div class="w-3 h-3 rounded-full bg-category-housing"></div>
+<span class="text-label-sm font-label-sm">住房 25%</span>
+</div>
+</div>
+</section>
+<!-- Trend Section -->
+<section class="bg-surface-container-low p-card-padding rounded-xl space-y-4 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md font-headline-md text-on-surface">近7天消费趋势</h2>
+<span class="text-label-sm font-label-sm text-primary font-bold">+12.4% vs 上周</span>
+</div>
+<div class="w-full h-32 flex items-end justify-between px-2 pt-4">
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-12 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.14</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-16 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.15</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-24 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.16</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-20 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.17</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container h-28 rounded-t-full"></div>
+<span class="text-[10px] text-on-surface-variant font-bold">今日</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-14 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.19</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-18 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.20</span>
+</div>
+</div>
+</section>
+<!-- Expenditure List -->
+<section class="space-y-gutter pb-8">
+<h2 class="text-headline-md font-headline-md text-on-surface px-1">支出明细</h2>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-shopping/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-shopping">shopping_bag</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">购物消费</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥3,794.40</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 45%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-shopping rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-housing/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-housing">home</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">居住缴费</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥2,108.00</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 25%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-housing rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-fun/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-fun">local_activity</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">娱乐休闲</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥1,264.80</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 15%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-fun rounded-full" style="width: 15%;"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-4 pb-safe bg-surface-container-lowest shadow-[0_-2px_12px_rgba(0,0,0,0.05)] z-50 rounded-t-xl">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="{{DATA:SCREEN:SCREEN_10}}">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<!-- Statistics (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-200" href="{{DATA:SCREEN:SCREEN_14}}">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-sm text-label-sm">统计</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="{{DATA:SCREEN:SCREEN_19}}">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">设置</span>
+</a>
+</nav>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trend bars interaction
+            const bars = document.querySelectorAll('.group');
+            bars.forEach(bar => {
+                bar.addEventListener('click', () => {
+                    bars.forEach(b => {
+                        const inner = b.querySelector('div');
+                        if (inner) inner.classList.replace('bg-primary-container', 'bg-primary-container/40');
+                        const label = b.querySelector('span');
+                        if (label) label.classList.remove('font-bold');
+                    });
+                    const targetInner = bar.querySelector('div');
+                    if (targetInner) targetInner.classList.replace('bg-primary-container/40', 'bg-primary-container');
+                    const targetLabel = bar.querySelector('span');
+                    if (targetLabel) targetLabel.classList.add('font-bold');
+                });
+            });
+        });
+    </script>
+</body></html>
