@@ -1462,6 +1462,22 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
       </div>
     </header>
     <main class="px-container-margin mt-4 space-y-3 max-w-md mx-auto">
+      <!-- Add Category Form -->
+      <div id="addCategoryForm" class="bg-card-bg-light rounded-3xl p-5 border border-primary/20 shadow-sm hidden">
+        <h3 class="font-headline-md text-on-surface mb-4">新增分类</h3>
+        <div class="space-y-2 mb-4">
+          <label class="font-label-sm text-on-surface-variant pl-1">名称（≤6个字）</label>
+          <input type="text" id="newCatName" class="w-full px-4 py-3 bg-surface-container-low rounded-2xl text-on-surface border-2 border-transparent focus:border-primary outline-none font-body-md" placeholder="分类名称" maxlength="6">
+        </div>
+        <div class="space-y-2 mb-4">
+          <label class="font-label-sm text-on-surface-variant pl-1">选择图标</label>
+          <div class="grid grid-cols-8 gap-2" id="emojiPicker"></div>
+        </div>
+        <div class="flex gap-3">
+          <button class="flex-1 py-3 bg-surface-container-high text-on-surface-variant font-headline-md rounded-2xl active:scale-[0.98] transition-all" onclick="closeAddCategory()">取消</button>
+          <button class="flex-1 py-3 bg-primary text-on-primary font-headline-md rounded-2xl active:scale-[0.98] transition-all shadow-lg shadow-primary/20" onclick="saveNewCategory()">确定添加</button>
+        </div>
+      </div>
       <div id="categoryListContainer">
         <div class="p-4 bg-card-bg-light rounded-2xl flex items-center gap-4 border border-outline-variant/10">
           <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-2xl">🍚</div>
@@ -1581,17 +1597,43 @@ window.saveBudget = function() {
 };
 
 // Category functions
+var EMOJI_LIST = ['🍚','🚗','🛒','🏠','🎬','💊','📚','📦','☕','🍕','🎮','✈️','💇','🎁','📱','🐱','💻','🎵','📷','🏋️','💄','🌿','💰','🔧','🎂','🍺','🚌','💡','📞','🧸','🎓','⚽'];
+var selectedEmoji = '📦';
+
+function initEmojiPicker() {
+  var grid = document.getElementById('emojiPicker');
+  if (!grid) return;
+  grid.innerHTML = '';
+  EMOJI_LIST.forEach(function(e) {
+    var btn = document.createElement('button');
+    btn.className = 'w-10 h-10 flex items-center justify-center text-xl rounded-xl transition-all ' + (selectedEmoji === e ? 'bg-primary text-white scale-110 shadow-md' : 'bg-surface-container-low hover:bg-surface-container-high');
+    btn.textContent = e;
+    btn.onclick = function() { selectedEmoji = e; initEmojiPicker(); };
+    grid.appendChild(btn);
+  });
+}
+
 window.openAddCategory = function() {
-  var name = prompt('输入新分类名称（最多6个字）：');
-  if (!name) return;
+  selectedEmoji = '📦';
+  document.getElementById('newCatName').value = '';
+  document.getElementById('addCategoryForm').classList.remove('hidden');
+  initEmojiPicker();
+};
+
+window.closeAddCategory = function() {
+  document.getElementById('addCategoryForm').classList.add('hidden');
+};
+
+window.saveNewCategory = function() {
+  var name = document.getElementById('newCatName').value.trim();
+  if (!name) { alert('请输入分类名称'); return; }
   name = name.slice(0, 6);
-  var emoji = prompt('输入图标（如：☕）：', '📦');
-  if (!emoji) emoji = '📦';
   var container = document.getElementById('categoryListContainer');
   var div = document.createElement('div');
   div.className = 'p-4 bg-card-bg-light rounded-2xl flex items-center gap-4 border border-outline-variant/10 mt-3';
-  div.innerHTML = '<div class="w-12 h-12 bg-surface-container-high rounded-2xl flex items-center justify-center text-2xl">' + emoji + '</div><div class="flex-1"><p class="font-body-lg text-on-surface font-medium">' + name + '</p><p class="font-label-sm text-on-surface-variant">自定义分类</p></div><button class="text-status-error font-label-sm active:scale-95" onclick="this.parentElement.remove()">删除</button>';
+  div.innerHTML = '<div class="w-12 h-12 bg-surface-container-high rounded-2xl flex items-center justify-center text-2xl">' + selectedEmoji + '</div><div class="flex-1"><p class="font-body-lg text-on-surface font-medium">' + name + '</p><p class="font-label-sm text-on-surface-variant">自定义分类</p></div><button class="text-status-error font-label-sm active:scale-95" onclick="this.parentElement.remove()">删除</button>';
   container.appendChild(div);
+  closeAddCategory();
 };
 
 // Security functions
