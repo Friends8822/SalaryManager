@@ -553,7 +553,6 @@ function enterApp(){
   document.getElementById('homePage').classList.add('active');
   state.page='home';
   document.querySelectorAll('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.page==='home')});
-  if(!state.exps.length){addDemoData()}
   render();
 }
 
@@ -576,6 +575,7 @@ function showExport(){switchPage('export')}
 
 function renderCatManage(){
   var c=document.getElementById('catManageList');c.innerHTML='';
+  if(!state.cats.length){c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>加载中...</p></div>';loadUserData().then(function(){renderCatManage()});return}
   state.cats.forEach(function(cat){
     var row=document.createElement('div');row.className='set-row';
     var left=document.createElement('div');left.className='s-left';
@@ -628,13 +628,6 @@ function toggleDark(){
 
 // ==================== TOAST ====================
 function toast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type?' '+type:'');setTimeout(function(){t.classList.add('show')},100);setTimeout(function(){t.classList.remove('show')},2500)}
-
-// ==================== DEMO DATA ====================
-function addDemoData(){
-  var now=new Date(),y=now.getFullYear(),m=now.getMonth();
-  [{d:15,c:'cat_food',a:35,n:'午餐'},{d:15,c:'cat_transport',a:6,n:'地铁'},{d:14,c:'cat_shopping',a:128.5,n:'超市采购'},{d:14,c:'cat_food',a:18,n:'咖啡'},{d:13,c:'cat_housing',a:199,n:'话费'},{d:12,c:'cat_food',a:42,n:'晚餐'},{d:12,c:'cat_entertainment',a:80,n:'电影'},{d:11,c:'cat_transport',a:25,n:'打车'},{d:10,c:'cat_food',a:28,n:'午餐'},{d:9,c:'cat_shopping',a:256,n:'网购'},{d:8,c:'cat_medical',a:68,n:'买药'},{d:7,c:'cat_food',a:32,n:'午餐'},{d:6,c:'cat_education',a:199,n:'课程'},{d:5,c:'cat_transport',a:12,n:'地铁'},{d:5,c:'cat_food',a:45,n:'火锅'}].forEach(function(s){state.exps.push({id:uid(),catId:s.c,amount:s.a,note:s.n,date:y+'-'+String(m+1).padStart(2,'0')+'-'+String(s.d).padStart(2,'0'),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()})});
-  saveUserData();
-}
 
 // ==================== INIT ====================
 async function init(){
