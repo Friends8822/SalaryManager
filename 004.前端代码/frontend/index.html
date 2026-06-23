@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>财务管家 - 春日记账</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "bg-dark": "#1A1E19",
+                    "on-surface": "#111f10",
+                    "status-error": "#FF8B94",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c1cab5",
+                    "surface-container-lowest": "#ffffff",
+                    "brand-primary-dark": "#8ED860",
+                    "surface": "#edfee5",
+                    "on-tertiary-fixed": "#00201e",
+                    "on-secondary-fixed-variant": "#3d4a3b",
+                    "tertiary": "#006a65",
+                    "on-primary-container": "#215100",
+                    "outline": "#717a68",
+                    "surface-container-low": "#e7f9e0",
+                    "tertiary-container": "#48c8bf",
+                    "primary-fixed": "#a9f778",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#dcedd5",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#cedfc7",
+                    "on-secondary-fixed": "#131e12",
+                    "tertiary-fixed-dim": "#5dd9d0",
+                    "category-shopping": "#FFD93D",
+                    "bg-light": "#F7FBF4",
+                    "inverse-surface": "#263423",
+                    "on-tertiary-fixed-variant": "#00504c",
+                    "on-primary-fixed-variant": "#215100",
+                    "surface-variant": "#d6e8cf",
+                    "on-surface-variant": "#41493a",
+                    "on-primary-fixed": "#092100",
+                    "surface-bright": "#edfee5",
+                    "primary-fixed-dim": "#8eda5f",
+                    "error-container": "#ffdad6",
+                    "card-bg-light": "#EDF6E5",
+                    "category-fun": "#A8E6CF",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#e5f6dd",
+                    "background": "#edfee5",
+                    "secondary": "#556252",
+                    "on-background": "#111f10",
+                    "tertiary-fixed": "#7cf6ec",
+                    "surface-tint": "#2e6c00",
+                    "secondary-fixed-dim": "#bccbb7",
+                    "inverse-primary": "#8eda5f",
+                    "category-housing": "#6C5CE7",
+                    "surface-container": "#e2f3da",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#d8e7d2",
+                    "on-tertiary-container": "#00504c",
+                    "on-secondary-container": "#5a6858",
+                    "surface-container-highest": "#d6e8cf",
+                    "card-bg-dark": "#252B23",
+                    "secondary-container": "#d8e7d2",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#7ec850",
+                    "primary": "#2e6c00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-gap": "24px",
+                    "base": "4px",
+                    "touch-target": "44px",
+                    "container-margin": "20px",
+                    "gutter": "12px",
+                    "card-padding": "16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Hanken Grotesk"],
+                    "display-amount": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "display-amount-mobile": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "display-amount": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-amount-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    
+</script>
+<style>
+
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #F7FBF4;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(237, 246, 229, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(46, 108, 0, 0.05);
+        }
+        @keyframes subtle-float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: subtle-float 4s ease-in-out infinite;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    
+body { min-height: 100dvh; font-family: 'Hanken Grotesk', sans-serif; }
+.page { display: none; }
+.page.active { display: block; }
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+
+<!-- LOGIN -->
+<div class="page active" id="page-login">
+
+<!-- Atmospheric Background Decoration -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -left-24 w-80 h-80 bg-secondary-container/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Login Container -->
+<main class="w-full max-w-sm flex flex-col items-center z-10">
+<!-- Brand Identity -->
+<header class="text-center mb-10">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6 mx-auto sprout-float shadow-sm border border-primary/10">
+<span class="material-symbols-outlined text-on-primary-container text-[40px]" data-icon="sprint">sprint</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">login</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">欢迎回来，开启清新理财的一天</p>
+</header>
+<!-- Form Section -->
+<div class="w-full space-y-6">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-widest pl-1" for="username">用户名</label>
+<div class="relative group input-focus-ring rounded-xl bg-surface-container-low transition-all duration-300">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="person">person</span>
+<input class="w-full h-touch-target bg-transparent border-none focus:ring-0 pl-12 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="username" placeholder="输入您的用户名" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-end pl-1 pr-1">
+<label class="font-label-sm text-label-sm text-primary uppercase tracking-widest" for="password">密码</label>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="alert('重置密码功能暂未开放'); return false;">忘记密码？</a>
+</div>
+<div class="relative group input-focus-ring rounded-xl bg-surface-container-low transition-all duration-300">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="lock">lock</span>
+<input class="w-full h-touch-target bg-transparent border-none focus:ring-0 pl-12 pr-12 font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="password" placeholder="输入您的密码" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors active:scale-95" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="w-full h-touch-target bg-primary text-on-primary font-headline-md text-headline-md rounded-full shadow-lg shadow-primary/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform" onclick="switchTo('dashboard')">
+                立即登录
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Biometric Alternative -->
+<div class="mt-8 flex flex-col items-center gap-4">
+<p class="font-label-sm text-label-sm text-outline-variant">或使用指纹/面容快速登录</p>
+<button class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant/30 flex items-center justify-center text-primary transition-transform active:scale-95 duration-200" onclick="alert('正在启动面容/指纹识别...');">
+<span class="material-symbols-outlined text-[28px]">fingerprint</span>
+</button>
+</div>
+<!-- Footer Actions -->
+<footer class="mt-auto pt-12 pb-8 flex flex-col items-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+            还没有账号？ 
+            <a class="text-primary font-bold hover:underline underline-offset-4 decoration-primary/30 active:scale-95" href="#" onclick="switchTo('register');return false">立即注册</a>
+</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 text-center">
+<a class="text-primary hover:underline underline-offset-4 decoration-primary/30 active:scale-95" href="#" onclick="switchTo('settings');return false">前往设置中心</a>
+</p>
+</footer>
+</main>
+<!-- Visual Polish: Bottom Illustration Area -->
+<div class="absolute bottom-0 left-0 right-0 h-32 overflow-hidden pointer-events-none opacity-40">
+<div class="w-full h-full bg-cover bg-bottom" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9s_HFwxzoPxm4gw9pJuRlNbYKhqIdxin3dd7r1T4neMGdnN0FnWIr1DLFG_Au3Iq5TxR6_LMicbTBczAFxwYibTC-2HUHM2win1gdcYBDsMhGCvYvhiEpyaGjkMkLnFkVes0ZMiYs7cciE01GaWnjeJovIvTQiAlcEkVzi-4HJbusLLQGA1eGynA-IPXf3b-3HAYFm3tXF97AuF1fuXKjLGI-DVpioKrhE4LgqwMKY3fBUYmIITVMtSMXZOJDTQhtDQ-f1ELxqWE')"></div>
+</div>
+<script>
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('eye-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerText = 'visibility_off';
+        } else {
+            input.type = 'password';
+            icon.innerText = 'visibility';
+        }
+    }
+</script>
+
+</div>
+
+<!-- REGISTER -->
+<div class="page" id="page-register">
+
+<!-- Atmospheric Background Decoration -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-80 h-80 bg-secondary-container/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-50 flex justify-between items-center px-container-margin h-touch-target bg-background/80 backdrop-blur-sm">
+<button class="flex items-center justify-center w-touch-target h-touch-target text-on-surface hover:bg-surface-container-low transition-colors rounded-full active:scale-95" onclick="switchTo('login');">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="font-bold text-primary text-headline-lg">财务管家</div>
+<div class="w-touch-target"></div>
+</header>
+<main class="w-full max-w-md px-container-margin py-6 flex-1 flex flex-col relative z-10">
+<!-- Hero Branding Section -->
+<div class="flex flex-col items-center text-center mb-8">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center mb-6 sprout-float soft-elevation border border-primary/10">
+<span class="material-symbols-outlined text-on-primary-container text-[40px]">eco</span>
+</div>
+<h1 class="text-on-background font-bold text-[28px] leading-[36px] mb-2">开启记账之旅</h1>
+<p class="text-on-surface-variant text-body-md">开启您的春季理财计划，让财富自然生长</p>
+</div>
+<!-- Registration Form Card -->
+<section class="bg-card-bg-light/80 backdrop-blur-sm p-card-padding rounded-xl border border-outline-variant/30 soft-elevation mb-6" id="registration-card">
+<div class="space-y-5">
+<!-- Username Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="username">用户名</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">person</span>
+<input class="w-full h-touch-target pl-10 pr-4 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="username" placeholder="请输入您的用户名" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="password">密码</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">lock</span>
+<input class="w-full h-touch-target pl-10 pr-12 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="password" placeholder="设置您的登录密码" type="password"/>
+<button class="absolute right-3 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword('password')" type="button">
+<span class="material-symbols-outlined" id="eye-password">visibility</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password Input -->
+<div class="space-y-1.5">
+<label class="text-on-surface-variant font-label-sm px-1" for="confirm-password">确认密码</label>
+<div class="relative flex items-center group input-focus-ring transition-all border border-outline rounded-xl bg-surface-container-lowest overflow-hidden">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">verified_user</span>
+<input class="w-full h-touch-target pl-10 pr-12 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline-variant font-body-md" id="confirm-password" placeholder="再次输入密码" type="password"/>
+<button class="absolute right-3 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword('confirm-password')" type="button">
+<span class="material-symbols-outlined" id="eye-confirm-password">visibility</span>
+</button>
+</div>
+</div>
+<!-- Error Message Area -->
+<div class="hidden" id="error-message">
+<div class="bg-error-container text-on-error-container px-4 py-2.5 rounded-lg flex items-center gap-2 text-label-sm">
+<span class="material-symbols-outlined text-[18px]">error</span>
+<span id="error-text">信息有误，请重试。</span>
+</div>
+</div>
+<!-- Terms & Privacy -->
+<div class="flex items-start gap-2 px-1">
+<input class="mt-1 w-4 h-4 rounded border-outline text-primary focus:ring-primary focus:ring-offset-0 transition-colors" id="terms" type="checkbox"/>
+<label class="text-on-surface-variant text-[12px] leading-[16px]" for="terms">
+                        我已阅读并同意 <a class="text-primary font-semibold hover:underline" href="#" onclick="alert('正在加载服务条款...'); return false;">服务条款</a> 和 <a class="text-primary font-semibold hover:underline" href="#" onclick="alert('正在加载隐私政策...'); return false;">隐私政策</a>
+</label>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-primary text-on-primary h-12 rounded-full font-semibold text-body-lg shadow-lg active:scale-95 transition-all duration-200 hover:opacity-90 flex items-center justify-center gap-2" id="register-btn" onclick="handleRegistration()">
+                    立即注册
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Social Alternative -->
+<div class="flex flex-col items-center gap-4">
+<p class="text-outline text-[12px]">或者通过以下方式快速注册</p>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-secondary-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-secondary-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</div>
+<!-- Footer Link -->
+<div class="mt-auto pt-8 text-center pb-4">
+<p class="text-on-surface-variant text-body-md">
+                已有账号？ <a class="text-primary font-bold hover:underline transition-colors" href="#" onclick="switchTo('login');return false">立即登录</a>
+</p>
+</div>
+</main>
+<!-- Bottom Illustration Decoration -->
+<div class="fixed bottom-0 left-0 w-full h-24 pointer-events-none opacity-30 flex items-end justify-around px-8">
+<span class="material-symbols-outlined text-primary text-[40px]">grass</span>
+<span class="material-symbols-outlined text-primary text-[28px] translate-y-2">eco</span>
+<span class="material-symbols-outlined text-primary text-[48px]">nature_people</span>
+<span class="material-symbols-outlined text-primary text-[20px] translate-y-1">potted_plant</span>
+</div>
+<script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(`eye-${inputId}`);
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                eyeIcon.textContent = 'visibility';
+            }
+        }
+
+        function showError(message) {
+            const errorArea = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const card = document.getElementById('registration-card');
+            
+            errorText.textContent = message;
+            errorArea.classList.remove('hidden');
+            card.classList.add('animate-shake');
+            setTimeout(() => card.classList.remove('animate-shake'), 400);
+        }
+
+        function handleRegistration() {
+            const username = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            const termsChecked = document.getElementById('terms').checked;
+            const btn = document.getElementById('register-btn');
+
+            // Reset error
+            document.getElementById('error-message').classList.add('hidden');
+
+            // Validation
+            if (!username || !pass || !confirmPass) {
+                showError('请填写所有必填信息');
+                return;
+            }
+            if (pass !== confirmPass) {
+                showError('两次输入的密码不一致');
+                return;
+            }
+            if (pass.length < 6) {
+                showError('密码长度不能少于6位');
+                return;
+            }
+            if (!termsChecked) {
+                showError('请先同意服务条款');
+                return;
+            }
+
+            // Mock Submission
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> 注册中...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert('注册成功！正在为您跳转到登录页面。');
+                // Target navigation after mock success
+                switchTo('login');
+            }, 1500);
+        }
+    </script>
+
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-container-margin h-touch-target">
+<div class="flex items-center gap-1 active:scale-95 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="calendar_today">calendar_today</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">4月</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="expand_more">expand_more</span>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95" onclick="switchTo('settings')">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="px-container-margin mt-6 space-y-section-gap">
+<!-- Hero Section: Spending -->
+<section class="animate-float">
+<div class="bg-card-bg-light p-6 rounded-[24px] flex flex-col items-center text-center shadow-sm border border-outline-variant/10">
+<p class="text-label-sm font-label-sm text-on-secondary-container mb-1 opacity-70">本月支出</p>
+<div class="flex items-baseline gap-1">
+<span class="text-headline-md font-headline-md text-primary opacity-80">¥</span>
+<h1 class="font-display-amount-mobile text-display-amount-mobile text-on-surface">4,286.50</h1>
+</div>
+<div class="mt-3 flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-primary text-base" data-icon="trending_down">trending_down</span>
+<span class="text-label-sm font-label-sm text-primary">较上月下降 12.5%</span>
+</div>
+</div>
+</section>
+<!-- Category Chart -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-on-surface">分类支出占比</h2>
+<button class="text-label-sm font-label-sm text-primary flex items-center gap-0.5 active:scale-95" onclick="switchTo('statistics')">
+                    详情 <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-5 gap-4 items-center bg-white p-card-padding rounded-2xl shadow-sm border border-outline-variant/5">
+<div class="col-span-2 relative flex items-center justify-center">
+<svg class="w-28 h-28 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-linecap="round" stroke-width="4"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="35, 100" stroke-linecap="round" stroke-width="4"></path>
+<path class="text-category-shopping" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="28, 100" stroke-dashoffset="-35" stroke-linecap="round" stroke-width="4"></path>
+<path class="text-tertiary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="14, 100" stroke-dashoffset="-63" stroke-linecap="round" stroke-width="4"></path>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-[10px] font-label-sm text-on-surface-variant uppercase">总量</span>
+<span class="text-headline-md font-headline-md text-on-surface">¥4k+</span>
+</div>
+</div>
+<div class="col-span-3 space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="flex-1 flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface">餐饮</span>
+<span class="text-body-md font-body-md font-semibold">35%</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-category-shopping"></div>
+<div class="flex-1 flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface">购物</span>
+<span class="text-body-md font-body-md font-semibold">28%</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary-container"></div>
+<div class="flex-1 flex justify-between items-center">
+<span class="text-body-md font-body-md text-on-surface">交通</span>
+<span class="text-body-md font-body-md font-semibold">14%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Monthly Budget -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">月度预算</h2>
+<span class="text-label-sm font-label-sm text-on-surface-variant">剩余 ¥713.50</span>
+</div>
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
+<div class="flex justify-between mb-3">
+<span class="text-body-md font-body-md text-on-surface opacity-80">已支出 85.7%</span>
+<span class="text-body-md font-body-md font-semibold text-on-surface">¥5,000.00</span>
+</div>
+<div class="w-full bg-surface-container-highest/50 h-3 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-status-error transition-all duration-1000" style="width: 85.7%"></div>
+</div>
+<p class="mt-3 text-label-sm font-label-sm text-status-error flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+                    预算即将耗尽，请注意控制消费
+                </p>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">最近记录</h2>
+<div class="space-y-3">
+<!-- Item 1 -->
+<div class="flex items-center p-4 bg-white rounded-2xl shadow-sm hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98] cursor-pointer">
+<div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="restaurant">restaurant</span>
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg text-body-lg text-on-surface">午餐 - 乐凯撒披萨</h4>
+<p class="text-label-sm font-label-sm text-on-surface-variant opacity-70">今天 12:30 · 餐饮</p>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-on-surface">- ¥68.00</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center p-4 bg-white rounded-2xl shadow-sm hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98] cursor-pointer">
+<div class="w-11 h-11 rounded-full bg-category-shopping/10 flex items-center justify-center mr-3">
+<span class="material-symbols-outlined text-category-shopping text-[20px]" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg text-body-lg text-on-surface">淘宝 - 春装衬衫</h4>
+<p class="text-label-sm font-label-sm text-on-surface-variant opacity-70">昨天 18:15 · 购物</p>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-on-surface">- ¥235.00</span>
+</div>
+</div>
+<button class="w-full h-12 flex items-center justify-center text-primary font-body-md border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors active:scale-95" onclick="switchTo('records')">records</button>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center transition-transform duration-200 z-40 active:scale-90" onclick="switchTo('record_panel')">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center py-2 px-6 active:scale-95 transition-transform" href="#" onclick="switchTo('dashboard');return false">
+<div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-primary">dashboard</span>
+</a>
+<!-- Statistics -->
+<a class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-transform" href="#" onclick="switchTo('statistics');return false">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm">statistics</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-transform" href="#" onclick="switchTo('settings');return false">
+<span class="material-symbols-outlined mb-1" data-icon="settings">设置</span>
+<span class="font-label-sm text-label-sm">settings</span>
+</a>
+</nav>
+<script>
+        // Simple touch feedback
+        document.querySelectorAll('button, a, .cursor-pointer').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                el.style.opacity = '0.8';
+            });
+            el.addEventListener('touchend', () => {
+                el.style.opacity = '1';
+            });
+        });
+    </script>
+
+</div>
+
+<!-- RECORDS -->
+<div class="page" id="page-records">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-container-margin h-touch-target">
+<button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full" onclick="switchTo('dashboard')">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">records</h1>
+<button class="flex items-center justify-center w-touch-target h-touch-target text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</header>
+<main class="pb-32">
+<!-- Month Selector -->
+<section class="px-container-margin py-4 flex items-center gap-2">
+<button class="flex items-center gap-1 active:scale-95 transition-transform">
+<span class="font-headline-lg text-on-surface">4月</span>
+<span class="font-body-md text-on-surface-variant">2024年</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="expand_more">expand_more</span>
+</button>
+</section>
+<!-- Category Filter Chips -->
+<nav class="flex overflow-x-auto no-scrollbar gap-gutter px-container-margin py-2">
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-primary text-on-primary font-label-sm active:scale-95 transition-transform duration-200">全部</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">餐饮</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">交通</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">购物</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm hover:bg-surface-container-highest active:scale-95 transition-transform duration-200 shadow-sm">娱乐</button>
+</nav>
+<!-- Records List -->
+<div class="space-y-6 mt-4">
+<!-- Date Group 1 -->
+<section>
+<header class="px-container-margin flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface">4月22日</span>
+<span class="font-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">周三</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">支出</span>
+<span class="font-body-lg font-bold text-on-surface">¥53.00</span>
+</div>
+</header>
+<div class="space-y-1">
+<!-- Item 1 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-fun/10 flex items-center justify-center text-[22px]">🍚</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">午餐</h4>
+<p class="font-label-sm text-on-surface-variant">12:30 · 美食广场</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥35.00</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-shopping/10 flex items-center justify-center text-[22px]">☕</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">拿铁咖啡</h4>
+<p class="font-label-sm text-on-surface-variant">14:15 · 星巴克</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥18.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Date Group 2 -->
+<section>
+<header class="px-container-margin flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-on-surface">4月21日</span>
+<span class="font-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">周二</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">支出</span>
+<span class="font-body-lg font-bold text-on-surface">¥128.50</span>
+</div>
+</header>
+<div class="space-y-1">
+<!-- Item 3 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-category-housing/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-housing" data-icon="commute">commute</span>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">滴滴打车</h4>
+<p class="font-label-sm text-on-surface-variant">08:45 · 加班回家</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥42.50</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="relative overflow-hidden group record-item">
+<div class="absolute inset-0 bg-status-error flex justify-end items-center px-6 text-on-error">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</div>
+<div class="relative swipe-action bg-surface-container-lowest flex items-center justify-between px-container-margin h-[76px] cursor-pointer active:bg-surface-container-low transition-colors duration-200 border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-body-lg text-on-surface font-medium">超市购物</h4>
+<p class="font-label-sm text-on-surface-variant">19:30 · 盒马鲜生</p>
+</div>
+</div>
+<span class="font-body-lg font-bold text-on-surface">-¥86.00</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" onclick="switchTo('record_panel')">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/10 ios-safe-bottom z-50">
+<div class="flex justify-around items-center h-16 px-4">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="switchTo('dashboard');return false">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-semibold active:scale-95" href="#" onclick="switchTo('statistics');return false">
+<div class="bg-primary-container/30 px-6 py-1 rounded-full mb-0.5">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<span class="font-label-sm">统计</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-95" href="#" onclick="switchTo('settings');return false">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm">设置</span>
+</a>
+</div>
+</nav>
+<script>
+        // Micro-interactions for Record Items
+        document.querySelectorAll('.record-item').forEach(item => {
+            let startX;
+            const content = item.querySelector('.swipe-action');
+            
+            item.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, {passive: true});
+
+            item.addEventListener('touchmove', (e) => {
+                let currentX = e.touches[0].clientX;
+                let diff = startX - currentX;
+                if (diff > 0 && diff < 120) {
+                    content.style.transform = `translateX(-${diff}px)`;
+                }
+            }, {passive: true});
+
+            item.addEventListener('touchend', (e) => {
+                let endX = e.changedTouches[0].clientX;
+                if (startX - endX > 60) {
+                    content.style.transform = `translateX(-64px)`;
+                } else {
+                    content.style.transform = `translateX(0px)`;
+                }
+            });
+            
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.swipe-action').forEach(el => {
+                    if (el !== content) el.style.transform = 'translateX(0px)';
+                });
+            });
+        });
+
+        // Filter chips active state
+        const chips = document.querySelectorAll('nav button');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                chip.classList.add('bg-primary', 'text-on-primary');
+            });
+        });
+    </script>
+
+</div>
+
+<!-- RECORD PANEL -->
+<div class="page" id="page-record_panel">
+
+<!-- Background Content (Blurred Home Dashboard) -->
+<div class="fixed inset-0 z-0 opacity-40 blur-sm pointer-events-none">
+<header class="flex justify-between items-center p-container-margin h-touch-target">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+<h1 class="font-headline-lg text-primary font-bold">4月</h1>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</header>
+<div class="px-container-margin space-y-6">
+<div class="h-32 w-full bg-surface-container rounded-2xl"></div>
+<div class="h-48 w-full bg-surface-container-low rounded-2xl"></div>
+<div class="space-y-4">
+<div class="h-16 w-full bg-surface-container-lowest rounded-xl"></div>
+<div class="h-16 w-full bg-surface-container-lowest rounded-xl"></div>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-on-background/20 backdrop-blur-[2px] z-40" onclick="switchTo('dashboard')"></div>
+<!-- Bottom Sheet Modal -->
+<div class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[92vh] bg-white rounded-t-[32px] animate-slide-up sheet-shadow overflow-hidden">
+<!-- Handle & Header -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-1 bg-outline-variant rounded-full mt-3 mb-1"></div>
+<div class="w-full px-container-margin py-2 flex items-center justify-between">
+<button class="w-touch-target h-touch-target flex items-center justify-center text-on-surface-variant rounded-full active:bg-surface-container-low transition-colors" onclick="switchTo('dashboard')">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h2 class="font-headline-md text-on-surface" id="record-panel">记一笔</h2>
+<div class="w-touch-target h-touch-target"></div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto scroll-hide px-container-margin pb-32">
+<!-- Amount Display -->
+<div class="py-6 flex flex-col items-center">
+<div class="text-on-surface-variant font-label-sm mb-2">输入金额</div>
+<div class="flex items-center space-x-1">
+<span class="text-headline-lg text-primary font-bold">¥</span>
+<div class="flex items-center">
+<span class="text-display-amount-mobile md:text-display-amount font-bold text-on-background" id="amount-display">0</span>
+<div class="w-[2px] h-8 bg-primary cursor-blink ml-1"></div>
+</div>
+</div>
+</div>
+<!-- Category Selector (Grid) -->
+<div class="grid grid-cols-4 gap-y-6 gap-x-gutter mb-8">
+<!-- Food -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="餐饮">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent active-category">
+                        🍚
+                    </div>
+<span class="font-label-sm text-on-surface-variant">餐饮</span>
+</button>
+<!-- Transport -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="交通">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        🚗
+                    </div>
+<span class="font-label-sm text-on-surface-variant">交通</span>
+</button>
+<!-- Shopping -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="购物">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        🛒
+                    </div>
+<span class="font-label-sm text-on-surface-variant">购物</span>
+</button>
+<!-- Housing -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="居住">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        🏠
+                    </div>
+<span class="font-label-sm text-on-surface-variant">居住</span>
+</button>
+<!-- Entertainment -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="娱乐">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        🎬
+                    </div>
+<span class="font-label-sm text-on-surface-variant">娱乐</span>
+</button>
+<!-- Medical -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="医疗">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        💊
+                    </div>
+<span class="font-label-sm text-on-surface-variant">医疗</span>
+</button>
+<!-- Education -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="教育">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        📚
+                    </div>
+<span class="font-label-sm text-on-surface-variant">教育</span>
+</button>
+<!-- Others -->
+<button class="category-btn flex flex-col items-center gap-2 group transition-all" data-cat="其他">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-2xl transition-all border-2 border-transparent">
+                        📦
+                    </div>
+<span class="font-label-sm text-on-surface-variant">其他</span>
+</button>
+</div>
+<!-- Metadata Inputs -->
+<div class="space-y-3 mb-8">
+<div class="flex items-center space-x-3 bg-surface-container-low rounded-2xl px-4 py-3.5 group focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<span class="material-symbols-outlined text-primary text-[22px]">event</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-md w-full p-0" readonly="" type="text" value="今天 (2026-04-22)"/>
+</div>
+<div class="flex items-center space-x-3 bg-surface-container-low rounded-2xl px-4 py-3.5 group focus-within:bg-white focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<span class="material-symbols-outlined text-primary text-[22px]">notes</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-body-md w-full p-0 placeholder:text-outline" placeholder="添加备注..." type="text"/>
+</div>
+</div>
+<!-- Number Keypad -->
+<div class="grid grid-cols-4 gap-3 mb-4">
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('1')">1</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('2')">2</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('3')">3</button>
+<button class="keypad-button h-14 bg-secondary-container rounded-2xl text-on-secondary-container flex items-center justify-center" onclick="deleteNum()">
+<span class="material-symbols-outlined">backspace</span>
+</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('4')">4</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('5')">5</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('6')">6</button>
+<button class="keypad-button h-14 bg-secondary-container rounded-2xl font-body-lg text-on-secondary-container" onclick="clearNum()">C</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('7')">7</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('8')">8</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('9')">9</button>
+<button class="keypad-button h-14 bg-primary text-on-primary rounded-2xl row-span-2 flex flex-col items-center justify-center font-headline-md active:bg-primary-container active:text-on-primary-container" onclick="saveTransaction()">
+<span class="text-sm font-medium mb-1">OK</span>
+<span class="material-symbols-outlined">done</span>
+</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface" onclick="appendNum('.')">.</button>
+<button class="keypad-button h-14 bg-surface-container-low rounded-2xl font-headline-md text-on-surface col-span-2" onclick="appendNum('0')">0</button>
+</div>
+</div>
+<!-- Persistent Bottom Action -->
+<div class="p-container-margin bg-white border-t border-outline-variant/10">
+<button class="w-full h-14 bg-primary text-on-primary font-headline-md rounded-full shadow-lg active:scale-[0.98] transition-all duration-200" onclick="saveTransaction()">
+                确认并保存
+            </button>
+</div>
+</div>
+<script>
+        // Keyboard Interactive Logic
+        let currentAmount = "0";
+        const display = document.getElementById('amount-display');
+
+        function appendNum(val) {
+            if (currentAmount === "0") {
+                if (val === ".") {
+                    currentAmount = "0.";
+                } else {
+                    currentAmount = val;
+                }
+            } else {
+                if (val === "." && currentAmount.includes(".")) return;
+                // Limit decimals to 2 places
+                if (currentAmount.includes(".") && currentAmount.split(".")[1].length >= 2) return;
+                // Limit overall length
+                if (currentAmount.length > 10) return;
+                currentAmount += val;
+            }
+            updateDisplay();
+        }
+
+        function deleteNum() {
+            if (currentAmount.length === 1) {
+                currentAmount = "0";
+            } else {
+                currentAmount = currentAmount.slice(0, -1);
+            }
+            updateDisplay();
+        }
+
+        function clearNum() {
+            currentAmount = "0";
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            display.innerText = currentAmount;
+            // Visual feedback - simple pulse
+            display.style.transform = 'scale(1.05)';
+            setTimeout(() => display.style.transform = 'scale(1)', 50);
+        }
+
+        // Category Selection UI
+        const catButtons = document.querySelectorAll('.category-btn');
+        catButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                catButtons.forEach(b => b.querySelector('div').classList.remove('active-category'));
+                btn.querySelector('div').classList.add('active-category');
+                
+                // Add a small scale effect
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => btn.style.transform = 'scale(1)', 100);
+            });
+        });
+
+        // Navigation Back
+        function saveTransaction() {
+            if (currentAmount === "0") {
+                alert('请输入金额');
+                return;
+            }
+            // Success animation or feedback could go here
+            switchTo('dashboard');
+        }
+
+        // Handle native touch feedback
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', () => {
+                button.style.opacity = '0.8';
+            });
+            button.addEventListener('touchend', () => {
+                button.style.opacity = '1';
+            });
+        });
+    </script>
+
+</div>
+
+<!-- STATISTICS -->
+<div class="page" id="page-statistics">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-bg-light flex justify-between items-center px-container-margin h-touch-target">
+<div class="flex items-center gap-2">
+<button class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">财务管家</h1>
+</div>
+<div class="flex items-center gap-1">
+<button class="flex items-center gap-1 px-3 py-2 rounded-full text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span class="text-label-sm font-label-sm">导出CSV</span>
+</button>
+<button class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-md mx-auto px-container-margin space-y-section-gap pt-4">
+<!-- Month Selector Card -->
+<section class="flex items-center justify-between bg-card-bg-light p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/50 text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">2024年 5月</span>
+<span class="text-headline-md font-headline-md text-primary font-bold">本月总支出</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-highest/50 text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</section>
+<!-- Donut Chart Hero -->
+<section class="flex flex-col items-center justify-center py-4">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- SVG Ring Chart -->
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle cx="50" cy="50" fill="transparent" r="42" stroke="#E2F3DA" stroke-width="12"></circle>
+<!-- Shopping 45% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#FFD93D" stroke-dasharray="263.89" stroke-dashoffset="145.14" stroke-width="12"></circle>
+<!-- Housing 25% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#6C5CE7" stroke-dasharray="263.89" stroke-dashoffset="197.92" stroke-width="12" style="transform-origin: center; transform: rotate(162deg);"></circle>
+<!-- Fun 15% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#A8E6CF" stroke-dasharray="263.89" stroke-dashoffset="224.31" stroke-width="12" style="transform-origin: center; transform: rotate(252deg);"></circle>
+<!-- Others 15% -->
+<circle class="chart-ring" cx="50" cy="50" fill="transparent" r="42" stroke="#556252" stroke-dasharray="263.89" stroke-dashoffset="224.31" stroke-width="12" style="transform-origin: center; transform: rotate(306deg);"></circle>
+</svg>
+<!-- Central Label -->
+<div class="absolute flex flex-col items-center">
+<span class="text-body-md font-body-md text-on-surface-variant">总额</span>
+<span class="text-display-amount-mobile font-display-amount-mobile text-on-background">¥8,432</span>
+</div>
+</div>
+<!-- Quick Legend -->
+<div class="grid grid-cols-2 gap-4 mt-8 w-full">
+<div class="flex items-center gap-2 p-3 bg-surface-container-lowest/60 rounded-lg border border-outline-variant/10">
+<div class="w-3 h-3 rounded-full bg-category-shopping"></div>
+<span class="text-label-sm font-label-sm">购物 45%</span>
+</div>
+<div class="flex items-center gap-2 p-3 bg-surface-container-lowest/60 rounded-lg border border-outline-variant/10">
+<div class="w-3 h-3 rounded-full bg-category-housing"></div>
+<span class="text-label-sm font-label-sm">住房 25%</span>
+</div>
+</div>
+</section>
+<!-- Trend Section -->
+<section class="bg-surface-container-low p-card-padding rounded-xl space-y-4 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md font-headline-md text-on-surface">近7天消费趋势</h2>
+<span class="text-label-sm font-label-sm text-primary font-bold">+12.4% vs 上周</span>
+</div>
+<div class="w-full h-32 flex items-end justify-between px-2 pt-4">
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-12 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.14</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-16 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.15</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-24 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.16</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-20 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.17</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container h-28 rounded-t-full"></div>
+<span class="text-[10px] text-on-surface-variant font-bold">今日</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-14 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.19</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-6 bg-primary-container/40 rounded-t-full h-18 group-hover:bg-primary-container transition-all"></div>
+<span class="text-[10px] text-on-surface-variant">05.20</span>
+</div>
+</div>
+</section>
+<!-- Expenditure List -->
+<section class="space-y-gutter pb-8">
+<h2 class="text-headline-md font-headline-md text-on-surface px-1">支出明细</h2>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-shopping/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-shopping">shopping_bag</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">购物消费</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥3,794.40</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 45%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-shopping rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-housing/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-housing">home</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">居住缴费</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥2,108.00</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 25%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-housing rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest/60 p-4 rounded-xl space-y-3 hover:bg-surface-container-lowest transition-all duration-300 border border-outline-variant/10 shadow-sm active:scale-[0.98]">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-category-fun/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-category-fun">local_activity</span>
+</div>
+<span class="text-body-lg font-body-lg text-on-surface font-semibold">娱乐休闲</span>
+</div>
+<div class="text-right">
+<div class="text-body-lg font-body-lg text-on-surface font-bold">¥1,264.80</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">占比 15%</div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-category-fun rounded-full" style="width: 15%;"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-container-margin w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-4 pb-safe bg-surface-container-lowest shadow-[0_-2px_12px_rgba(0,0,0,0.05)] z-50 rounded-t-xl">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="#" onclick="switchTo('dashboard');return false">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</a>
+<!-- Statistics (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-200" href="#" onclick="switchTo('statistics');return false">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-sm text-label-sm">统计</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:opacity-80 active:scale-95 transition-transform duration-200 py-1" href="#" onclick="switchTo('settings');return false">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">设置</span>
+</a>
+</nav>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trend bars interaction
+            const bars = document.querySelectorAll('.group');
+            bars.forEach(bar => {
+                bar.addEventListener('click', () => {
+                    bars.forEach(b => {
+                        const inner = b.querySelector('div');
+                        if (inner) inner.classList.replace('bg-primary-container', 'bg-primary-container/40');
+                        const label = b.querySelector('span');
+                        if (label) label.classList.remove('font-bold');
+                    });
+                    const targetInner = bar.querySelector('div');
+                    if (targetInner) targetInner.classList.replace('bg-primary-container/40', 'bg-primary-container');
+                    const targetLabel = bar.querySelector('span');
+                    if (targetLabel) targetLabel.classList.add('font-bold');
+                });
+            });
+        });
+    </script>
+
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+
+<!-- Top AppBar -->
+<header class="bg-background/80 backdrop-blur-md w-full sticky top-0 z-40">
+<div class="flex justify-between items-center px-container-margin h-touch-target">
+<button class="active:scale-95 duration-200 text-primary" onclick="window.history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg text-primary font-bold">settings</h1>
+<button class="active:scale-95 duration-200 text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="px-container-margin mt-6 space-y-section-gap max-w-md mx-auto">
+<!-- User Profile Section -->
+<section class="flex flex-col items-center py-6 bg-card-bg-light dark:bg-card-bg-dark rounded-3xl border border-outline-variant/10 shadow-sm">
+<div class="relative active:scale-95 transition-transform">
+<div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-surface-container">
+<img alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23717a68'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary p-1.5 rounded-full shadow-md border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</div>
+</div>
+<h2 class="mt-4 font-headline-md text-headline-md text-on-surface">财务管家用户</h2>
+<p class="text-on-surface-variant font-label-sm text-label-sm opacity-60">UID: 8829011</p>
+</section>
+<!-- Financial Settings -->
+<section class="space-y-gutter">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest pl-2 opacity-70">财务偏好</h3>
+<div class="bg-card-bg-light dark:bg-card-bg-dark rounded-2xl overflow-hidden shadow-sm border border-outline-variant/5">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">预算管理</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">设置每月支出上限</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="p-4 flex items-center justify-between active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-tertiary-container/20 rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">category</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">类别管理</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">自定义图标与颜色</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Data & Security -->
+<section class="space-y-gutter">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest pl-2 opacity-70">数据与安全</h3>
+<div class="bg-card-bg-light dark:bg-card-bg-dark rounded-2xl overflow-hidden shadow-sm border border-outline-variant/5">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-secondary-container/20 rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">ios_share</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">导出数据 (CSV)</p>
+</div>
+<span class="material-symbols-outlined text-outline">download</span>
+</div>
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-outline/10 rounded-xl flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined">dark_mode</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">深色模式</p>
+</div>
+<div class="relative inline-block w-12 h-6 align-middle select-none">
+<input class="ios-toggle absolute block w-6 h-6 rounded-full appearance-none cursor-pointer opacity-0" id="toggle" type="checkbox"/>
+<label class="ios-toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer transition-colors duration-200 ease-in relative" for="toggle"></label>
+</div>
+</div>
+<div class="p-4 flex items-center justify-between active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-status-error/10 rounded-xl flex items-center justify-center text-error">
+<span class="material-symbols-outlined">security</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">安全设置</p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- About -->
+<section class="space-y-gutter">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest pl-2 opacity-70">关于</h3>
+<div class="bg-card-bg-light dark:bg-card-bg-dark rounded-2xl overflow-hidden shadow-sm border border-outline-variant/5">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10">
+<p class="font-body-lg text-body-lg text-on-surface">当前版本</p>
+<p class="text-on-surface-variant font-body-md">V1.2</p>
+</div>
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10 active:bg-surface-container-low transition-colors cursor-pointer">
+<p class="font-body-lg text-body-lg text-on-surface">用户协议</p>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="p-4 flex items-center justify-between active:bg-surface-container-low transition-colors cursor-pointer">
+<p class="font-body-lg text-body-lg text-on-surface">隐私政策</p>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Logout -->
+<section class="pt-4 pb-8">
+<button class="w-full h-touch-target bg-error/10 text-error font-headline-md rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 border border-error/20" onclick="switchTo('login')">
+<span class="material-symbols-outlined">logout</span>
+                退出登录
+            </button>
+<p class="text-center mt-8 text-on-surface-variant opacity-40 font-label-sm">© 2024 SalaryManager. Spring Minimal Edition.</p>
+</section>
+</main>
+<!-- Bottom NavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe bg-white/90 backdrop-blur-md z-50 rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.04)]">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" onclick="switchTo('dashboard')">
+<span class="material-symbols-outlined mb-0.5">home</span>
+<span class="font-label-sm text-label-sm">首页</span>
+</button>
+<!-- Statistics -->
+<button class="flex flex-col items-center justify-center py-2 px-6 text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" onclick="switchTo('statistics')">
+<span class="material-symbols-outlined mb-0.5">analytics</span>
+<span class="font-label-sm text-label-sm">统计</span>
+</button>
+<!-- Settings (Active) -->
+<button class="flex flex-col items-center justify-center py-2 px-6 text-primary active:scale-95 transition-all duration-200" onclick="switchTo('login')">
+<div class="bg-primary-container/30 rounded-full px-5 py-1 mb-0.5">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold">设置</span>
+</button>
+</nav>
+<script>
+        // Theme Toggle Simulation
+        const toggle = document.getElementById('toggle');
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.classList.add('dark');
+                document.body.style.backgroundColor = '#1A1E19';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.style.backgroundColor = '#F7FBF4';
+            }
+            // Haptic feedback simulation
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+        });
+
+        // Add active state to list items
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('click', () => {
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate(5);
+                }
+            });
+        });
+    </script>
+
+</div>
+
+<script>
+function switchTo(page) {
+  document.querySelectorAll('.page').forEach(function(el) { el.classList.remove('active'); });
+  var target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+}
+
+// Handle record_panel special keyboard functions
+window.appendNum = function(n) {
+  var input = document.querySelector('#page-record_panel input[type="text"]');
+  if (!input) return;
+  var val = input.value;
+  // Limit input length
+  if (val.replace(/[^0-9]/g,'').length >= 10) return;
+  input.value = val + n;
+  var amt = parseFloat(input.value.replace(/[^0-9.]/g,''));
+};
+
+window.togglePassword = function(id) {
+  var input = document.getElementById(id || 'password');
+  var icon = document.getElementById('eye-icon');
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (icon) icon.innerText = 'visibility_off';
+  } else {
+    input.type = 'password';
+    if (icon) icon.innerText = 'visibility';
+  }
+};
+
+window.deleteLastChar = function() {
+  var input = document.querySelector('#page-record_panel input[type="text"]');
+  if (!input) return;
+  input.value = input.value.slice(0, -1);
+};
+
+// Enter key on login
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('page-login').classList.contains('active')) {
+    switchTo('dashboard');
+  }
+});
+</script>
+</body>
+</html>
