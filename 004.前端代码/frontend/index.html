@@ -194,7 +194,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </div>
 <!-- Submit Button -->
 <div class="pt-4">
-<button class="w-full h-touch-target bg-primary text-on-primary font-headline-md text-headline-md rounded-full shadow-lg shadow-primary/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform" onclick="switchTo('dashboard')">
+<button class="w-full h-touch-target bg-primary text-on-primary font-headline-md text-headline-md rounded-full shadow-lg shadow-primary/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform" onclick="handleLogin()">
                 立即登录
                 <span class="material-symbols-outlined">arrow_forward</span>
 </button>
@@ -311,7 +311,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </label>
 </div>
 <!-- Submit Button -->
-<button class="w-full bg-primary text-on-primary h-12 rounded-full font-semibold text-body-lg shadow-lg active:scale-95 transition-all duration-200 hover:opacity-90 flex items-center justify-center gap-2" id="register-btn" onclick="handleRegistration()">
+<button class="w-full bg-primary text-on-primary h-12 rounded-full font-semibold text-body-lg shadow-lg active:scale-95 transition-all duration-200 hover:opacity-90 flex items-center justify-center gap-2" id="register-btn" onclick="handleRegister()">
                     立即注册
                     <span class="material-symbols-outlined">arrow_forward</span>
 </button>
@@ -435,7 +435,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 <!-- Hero Section: Spending -->
 <section class="animate-float">
 <div class="bg-card-bg-light p-6 rounded-[24px] flex flex-col items-center text-center shadow-sm border border-outline-variant/10">
-<p class="text-label-sm font-label-sm text-on-secondary-container mb-1 opacity-70">本月支出</p>
+<p class="text-label-sm font-label-sm text-on-secondary-container mb-1 opacity-70">本月支出</p><span class="stat-value" id="statTotalExpense">¥0</span><p class="font-display-amount text-display-amount-mobile text-on-surface" id="expenseTotal">¥0</p>
 <div class="flex items-baseline gap-1">
 <span class="text-headline-md font-headline-md text-primary opacity-80">¥</span>
 <h1 class="font-display-amount-mobile text-display-amount-mobile text-on-surface">4,286.50</h1>
@@ -1424,7 +1424,7 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
         </div>
         <div class="relative mb-6">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-on-surface-variant">¥</span>
-          <input type="number" id="budgetAmount" class="w-full pl-12 pr-4 py-4 bg-surface-container-low rounded-2xl text-display-amount-mobile font-bold text-on-surface border-2 border-transparent focus:border-primary outline-none transition-all" placeholder="5,000" inputmode="decimal">
+          <input type="number" id="budgetAmtInput" class="w-full pl-12 pr-4 py-4 bg-surface-container-low rounded-2xl text-display-amount-mobile font-bold text-on-surface border-2 border-transparent focus:border-primary outline-none transition-all" placeholder="5,000" inputmode="decimal">
         </div>
         <div class="bg-surface-container-low rounded-2xl p-4 mb-6">
           <div class="flex justify-between items-center mb-2">
@@ -1562,48 +1562,368 @@ body { min-height: 100dvh; font-family: "Hanken Grotesk", sans-serif; }
 </div>
 
 <script>
-function switchTo(page) {
-  document.querySelectorAll(".page").forEach(function(el) { el.classList.remove("active"); });
-  var target = document.getElementById("page-" + page);
-  if (target) { target.classList.add("active"); target.scrollTop = 0; window.scrollTo(0, 0); }
-}
-window.appendNum = function(n) {
-  var input = document.querySelector("#page-record_panel input[type=text]");
-  if (!input) return;
-  var val = input.value.replace(/[^0-9.]/g,"");
-  if (val.length >= 10) return;
-  input.value = val + n;
-};
-window.deleteLastChar = function() {
-  var input = document.querySelector("#page-record_panel input[type=text]");
-  if (!input) return;
-  input.value = input.value.slice(0, -1);
-};
-window.togglePassword = function(id) {
-  var input = document.getElementById(id || "password");
-  var icon = document.getElementById("eye-icon");
-  if (!input) return;
-  if (input.type === "password") { input.type = "text"; if (icon) icon.innerText = "visibility_off"; }
-  else { input.type = "password"; if (icon) icon.innerText = "visibility"; }
-};
-// Budget functions
-window.saveBudget = function() {
-  var input = document.getElementById('budgetAmount');
-  var amt = parseFloat(input.value);
-  if (!amt || amt <= 0) { alert('请输入有效的预算金额'); return; }
-  alert('预算已保存：¥' + amt.toLocaleString() + '/月');
-  input.value = '';
-  switchTo('settings');
-};
+// ==================== API LAYER ====================
+var API_BASE = 'http://localhost:8080';
+var AUTH_TOKEN = localStorage.getItem('fm_token') || '';
 
-// Category functions
+function apiHeaders() {
+  var h = {'Content-Type': 'application/json'};
+  if (AUTH_TOKEN) h['Authorization'] = 'Bearer ' + AUTH_TOKEN;
+  return h;
+}
+
+async function apiGet(path) {
+  var r = await fetch(API_BASE + path, {headers: apiHeaders()});
+  return r.json();
+}
+
+async function apiPost(path, body) {
+  var r = await fetch(API_BASE + path, {method: 'POST', headers: apiHeaders(), body: JSON.stringify(body)});
+  return r.json();
+}
+
+async function apiPut(path, body) {
+  var r = await fetch(API_BASE + path, {method: 'PUT', headers: apiHeaders(), body: JSON.stringify(body)});
+  return r.json();
+}
+
+async function apiDelete(path) {
+  var r = await fetch(API_BASE + path, {method: 'DELETE', headers: apiHeaders()});
+  return r.json();
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast'); if (!t) return;
+  t.textContent = msg; t.className = 'toast ' + (type || 'success');
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ==================== PAGE SWITCHING ====================
+function switchTo(page) {
+  document.querySelectorAll('.page').forEach(function(el) { el.classList.remove('active'); });
+  var target = document.getElementById('page-' + page);
+  if (target) { target.classList.add('active'); target.scrollTop = 0; window.scrollTo(0, 0); }
+  if (page === 'dashboard') refreshDashboard();
+  if (page === 'records') refreshRecords();
+  if (page === 'statistics') refreshStatistics();
+  if (page === 'category_page') refreshCategories();
+  if (page === 'budget_page') refreshBudgetPage();
+}
+
+// ==================== AUTH ====================
+async function handleLogin() {
+  var u = document.getElementById('loginUsername').value.trim();
+  var p = document.getElementById('loginPassword').value;
+  if (!u || !p) { showToast('请输入用户名和密码', 'error'); return; }
+  var res = await apiPost('/api/auth/login', {username: u, password: p});
+  if (res.code === 200) {
+    AUTH_TOKEN = res.data.token;
+    localStorage.setItem('fm_token', AUTH_TOKEN);
+    localStorage.setItem('fm_user', u);
+    document.getElementById('displayName').textContent = u;
+    switchTo('dashboard');
+    showToast('登录成功', 'success');
+  } else {
+    showToast(res.message || '登录失败', 'error');
+  }
+}
+
+async function handleRegister() {
+  var u = document.getElementById('username').value.trim();
+  var p = document.getElementById('password').value;
+  var p2 = document.getElementById('confirm-password').value;
+  if (!u || u.length < 3) { showToast('用户名至少3位', 'error'); return; }
+  if (!p || p.length < 6) { showToast('密码至少6位', 'error'); return; }
+  if (p !== p2) { showToast('两次密码不一致', 'error'); return; }
+  var res = await apiPost('/api/auth/register', {username: u, password: p});
+  if (res.code === 200) {
+    showToast('注册成功，请登录', 'success');
+    document.getElementById('loginUsername').value = u;
+    switchTo('login');
+  } else {
+    showToast(res.message || '注册失败', 'error');
+  }
+}
+
+function logout() {
+  AUTH_TOKEN = '';
+  localStorage.removeItem('fm_token');
+  localStorage.removeItem('fm_user');
+  document.querySelectorAll('.main-content.page').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById('loginPage').classList.add('active');
+}
+
+// ==================== DASHBOARD ====================
+async function refreshDashboard() {
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiGet('/api/stats/monthly?month=' + month);
+  if (res.code !== 200) return;
+
+  var d = res.data;
+  // Update header cards
+  document.getElementById('expenseTotal').textContent = '¥' + Number(d.totalExpense).toLocaleString('zh-CN', {minimumFractionDigits: 2});
+
+  var b = d.budget;
+  var budgetEl = document.getElementById('budgetInfo');
+  if (b) {
+    budgetEl.textContent = '¥' + Number(b.budgetAmount).toLocaleString();
+    // Update budget bar
+    var bb = document.getElementById('budgetBar');
+    if (bb) {
+      var pct = Number(b.progressPercent);
+      var cls = b.isOver ? 'over' : (b.isWarn ? 'warn' : 'normal');
+      bb.innerHTML = '<div style="font-size:13px;color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between"><span>预算 ¥' + Number(b.budgetAmount).toLocaleString() + '</span><span>已用 ¥' + Number(b.spentAmount).toLocaleString('zh-CN',{minimumFractionDigits:2}) + '</span></div>' +
+        '<div class="budget-bar"><div class="budget-fill ' + cls + '" style="width:' + Math.min(pct, 100) + '%"></div></div>' +
+        '<div class="budget-info"><span style="color:' + (b.isOver ? 'var(--danger)' : (b.isWarn ? 'var(--warning)' : 'var(--text2)')) + '">' + (b.isOver ? '本月已超支' : (b.isWarn ? '已用 ' + pct + '%，注意控制哦' : '剩余 ¥' + Number(b.remaining).toLocaleString('zh-CN',{minimumFractionDigits:2}))) + '</span></div>';
+    }
+  } else {
+    budgetEl.textContent = '未设置';
+  }
+
+  // Category list
+  var catList = document.getElementById('catList');
+  if (catList && d.categories) {
+    catList.innerHTML = '';
+    if (d.categories.length === 0) {
+      catList.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><p>暂无记录</p></div>';
+    } else {
+      d.categories.forEach(function(c) {
+        var row = document.createElement('div'); row.className = 'cat-row';
+        row.innerHTML = '<div class="c-icon" style="background:' + c.color + '22">' + c.icon + '</div><div class="c-name">' + c.categoryName + '</div><div class="c-amount">¥' + Number(c.amount).toLocaleString('zh-CN',{minimumFractionDigits:2}) + ' <small style="color:var(--text2)">' + c.percent + '%</small></div>';
+        catList.appendChild(row);
+      });
+    }
+  }
+
+  // Recent transactions
+  var txnList = document.getElementById('txnList');
+  if (txnList) {
+    var expRes = await apiGet('/api/expenses?month=' + month);
+    if (expRes.code === 200 && expRes.data) {
+      txnList.innerHTML = '';
+      var exps = expRes.data.slice(0, 10);
+      if (exps.length === 0) {
+        txnList.innerHTML = '<div class="empty"><div class="empty-icon">💭</div><p>暂无记录</p></div>';
+      } else {
+        exps.forEach(function(e) {
+          var row = document.createElement('div'); row.className = 'txn-item';
+          row.onclick = function() { editExpense(e); };
+          var dateStr = e.expenseDate; var d = new Date(dateStr);
+          var cat = e.category || {};
+          row.innerHTML = '<div class="txn-icon" style="background:' + (cat.color || '#888') + '22">' + (cat.icon || '📦') + '</div><div class="txn-info"><div class="txn-cat">' + (cat.name || '分类') + (e.note ? ' · ' + e.note : '') + '</div><div class="txn-date">' + (d.getMonth()+1) + '月' + d.getDate() + '日</div></div><div class="txn-amount">-¥' + Number(e.amount).toLocaleString('zh-CN',{minimumFractionDigits:2}) + '</div><button class="txn-del" onclick="event.stopPropagation();deleteExpense(' + e.id + ')">删除</button>';
+          txnList.appendChild(row);
+        });
+      }
+    }
+  }
+}
+
+// ==================== RECORDS ====================
+async function refreshRecords() {
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiGet('/api/expenses?month=' + month);
+  if (res.code !== 200) return;
+  var container = document.getElementById('recordsList');
+  if (!container) return;
+  container.innerHTML = '';
+  var exps = res.data || [];
+  if (exps.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>暂无记录</p></div>';
+    return;
+  }
+  exps.forEach(function(e) {
+    var row = document.createElement('div'); row.className = 'txn-item';
+    row.onclick = function() { editExpense(e); };
+    var dateStr = e.expenseDate; var d = new Date(dateStr);
+    var cat = e.category || {};
+    row.innerHTML = '<div class="txn-icon" style="background:' + (cat.color || '#888') + '22">' + (cat.icon || '📦') + '</div><div class="txn-info"><div class="txn-cat">' + (cat.name || '分类') + (e.note ? ' · ' + e.note : '') + '</div><div class="txn-date">' + (d.getMonth()+1) + '月' + d.getDate() + '日</div></div><div class="txn-amount">-¥' + Number(e.amount).toLocaleString('zh-CN',{minimumFractionDigits:2}) + '</div><button class="txn-del" onclick="event.stopPropagation();deleteExpense(' + e.id + ')">删除</button>';
+    container.appendChild(row);
+  });
+}
+
+async function deleteExpense(id) {
+  if (!confirm('确定删除？')) return;
+  var res = await apiDelete('/api/expenses/' + id);
+  if (res.code === 200) {
+    showToast('已删除', 'success');
+    refreshRecords();
+    refreshDashboard();
+  } else {
+    showToast(res.message || '删除失败', 'error');
+  }
+}
+
+// ==================== ADD / EDIT EXPENSE ====================
+var editingId = null;
+var selectedCatId = null;
+
+function openAddModal() {
+  editingId = null; selectedCatId = null;
+  document.getElementById('amtInput').value = '';
+  document.getElementById('noteInput').value = '';
+  document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+  document.getElementById('submitBtn').textContent = '✓ 记一笔';
+  loadCategoriesForModal();
+  document.getElementById('addModal').classList.add('active');
+}
+
+function editExpense(e) {
+  editingId = e.id; selectedCatId = e.categoryId;
+  document.getElementById('amtInput').value = e.amount;
+  document.getElementById('noteInput').value = e.note || '';
+  document.getElementById('dateInput').value = e.expenseDate || '';
+  document.getElementById('submitBtn').textContent = '保存修改';
+  loadCategoriesForModal();
+  document.getElementById('addModal').classList.add('active');
+}
+
+function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
+
+async function loadCategoriesForModal() {
+  var res = await apiGet('/api/categories');
+  var g = document.getElementById('modalCatGrid'); if (!g) return;
+  g.innerHTML = '';
+  if (res.code === 200 && res.data) {
+    res.data.forEach(function(cat) {
+      var btn = document.createElement('button');
+      btn.className = 'cat-opt' + (selectedCatId === cat.id ? ' selected' : '');
+      btn.onclick = function() { selectedCatId = cat.id; loadCategoriesForModal(); };
+      btn.innerHTML = '<span class="ico">' + cat.icon + '</span><span class="nam">' + cat.name + '</span>';
+      g.appendChild(btn);
+    });
+  }
+}
+
+async function submitExpense() {
+  var amt = parseFloat(document.getElementById('amtInput').value);
+  if (!amt || amt <= 0) { showToast('请输入有效金额', 'error'); return; }
+  if (amt > 99999999) { showToast('金额超出范围', 'error'); return; }
+  var body = {
+    categoryId: selectedCatId || 1,
+    amount: Math.round(amt * 100) / 100,
+    note: document.getElementById('noteInput').value,
+    expenseDate: document.getElementById('dateInput').value
+  };
+  var res;
+  if (editingId) {
+    res = await apiPut('/api/expenses/' + editingId, body);
+  } else {
+    res = await apiPost('/api/expenses', body);
+  }
+  if (res.code === 200) {
+    showToast(editingId ? '✓ 已更新' : '✓ 已记录', 'success');
+    closeAddModal();
+    refreshDashboard();
+    refreshRecords();
+  } else {
+    showToast(res.message || '操作失败', 'error');
+  }
+}
+
+// ==================== STATISTICS ====================
+async function refreshStatistics() {
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiGet('/api/stats/monthly?month=' + month);
+  if (res.code !== 200) return;
+  var d = res.data;
+  // Update stat cards
+  var t1 = document.getElementById('statTotalExpense');
+  if (t1) t1.textContent = '¥' + Number(d.totalExpense).toLocaleString('zh-CN', {minimumFractionDigits: 2});
+
+  var daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  var elapsed = Math.min(now.getDate(), daysInMonth);
+  var dailyAvg = elapsed > 0 ? Number(d.totalExpense) / elapsed : 0;
+  var t2 = document.getElementById('statDailyAvg');
+  if (t2) t2.textContent = '¥' + dailyAvg.toLocaleString('zh-CN', {minimumFractionDigits: 2});
+
+  // Charts
+  renderStatsCharts(d);
+}
+
+function renderStatsCharts(d) {
+  // Pie chart
+  var pieCtx = document.getElementById('pieChart');
+  if (pieCtx && d.categories && d.categories.length > 0) {
+    if (window._pieInst) window._pieInst.destroy();
+    window._pieInst = new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: d.categories.map(function(c) { return c.categoryName; }),
+        datasets: [{data: d.categories.map(function(c) { return c.amount; }), backgroundColor: d.categories.map(function(c) { return c.color; }), borderWidth: 0}]
+      },
+      options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {position: 'right', labels: {font: {size: 11}, padding: 10}}}}
+    });
+  }
+  // Trend chart
+  var trendCtx = document.getElementById('trendChart');
+  if (trendCtx && d.dailyTrend && d.dailyTrend.length > 0) {
+    if (window._trendInst) window._trendInst.destroy();
+    window._trendInst = new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: d.dailyTrend.map(function(t) { var dt = new Date(t.date); return (dt.getMonth()+1) + '/' + dt.getDate(); }),
+        datasets: [{label: '支出', data: d.dailyTrend.map(function(t) { return t.amount; }), borderColor: '#7EC850', backgroundColor: 'rgba(126,200,80,0.1)', fill: true, tension: 0.4, pointRadius: 4}]
+      },
+      options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true}}}
+    });
+  }
+}
+
+// ==================== BUDGET ====================
+async function refreshBudgetPage() {
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiGet('/api/budgets?month=' + month);
+  if (res.code === 200 && res.data) {
+    document.getElementById('budgetAmtInput').value = res.data.amount || '';
+  }
+}
+
+async function saveBudget() {
+  var v = parseFloat(document.getElementById('budgetAmtInput').value);
+  if (!v || v <= 0) { showToast('请输入预算金额', 'error'); return; }
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiPost('/api/budgets', {budgetMonth: month, amount: v});
+  if (res.code === 200) {
+    showToast('✓ 预算已保存', 'success');
+    switchTo('dashboard');
+  } else {
+    showToast(res.message || '保存失败', 'error');
+  }
+}
+
+// ==================== CATEGORIES ====================
 var EMOJI_LIST = ['🍚','🚗','🛒','🏠','🎬','💊','📚','📦','☕','🍕','🎮','✈️','💇','🎁','📱','🐱','💻','🎵','📷','🏋️','💄','🌿','💰','🔧','🎂','🍺','🚌','💡','📞','🧸','🎓','⚽'];
 var selectedEmoji = '📦';
 
+async function refreshCategories() {
+  var res = await apiGet('/api/categories');
+  var c = document.getElementById('catManageList'); if (!c) return;
+  c.innerHTML = '';
+  if (res.code === 200 && res.data) {
+    res.data.forEach(function(cat) {
+      var row = document.createElement('div'); row.className = 'set-row';
+      row.innerHTML = '<div class="s-left"><span style="width:32px;height:32px;border-radius:8px;background:' + cat.color + '22;display:flex;align-items:center;justify-content:center;font-size:18px">' + cat.icon + '</span>' + cat.name + '<small style="color:var(--text2)">' + (cat.isPreset ? '预设' : '自定义') + '</small></div>' + (cat.isPreset ? '' : '<button class="txn-del" onclick="deleteCategory(' + cat.id + ')">删除</button>');
+      c.appendChild(row);
+    });
+  }
+}
+
+async function deleteCategory(id) {
+  if (!confirm('删除此分类？')) return;
+  var res = await apiDelete('/api/categories/' + id);
+  if (res.code === 200) { showToast('已删除'); refreshCategories(); }
+  else { showToast(res.message || '删除失败', 'error'); }
+}
+
 function initEmojiPicker() {
   var grid = document.getElementById('emojiPicker');
-  if (!grid) return;
-  grid.innerHTML = '';
+  if (!grid) return; grid.innerHTML = '';
   EMOJI_LIST.forEach(function(e) {
     var btn = document.createElement('button');
     btn.className = 'w-10 h-10 flex items-center justify-center text-xl rounded-xl transition-all ' + (selectedEmoji === e ? 'bg-primary text-white scale-110 shadow-md' : 'bg-surface-container-low hover:bg-surface-container-high');
@@ -1624,36 +1944,147 @@ window.closeAddCategory = function() {
   document.getElementById('addCategoryForm').classList.add('hidden');
 };
 
-window.saveNewCategory = function() {
+async function saveNewCategory() {
   var name = document.getElementById('newCatName').value.trim();
-  if (!name) { alert('请输入分类名称'); return; }
+  if (!name) { showToast('请输入分类名称', 'error'); return; }
   name = name.slice(0, 6);
-  var container = document.getElementById('categoryListContainer');
-  var div = document.createElement('div');
-  div.className = 'p-4 bg-card-bg-light rounded-2xl flex items-center gap-4 border border-outline-variant/10 mt-3';
-  div.innerHTML = '<div class="w-12 h-12 bg-surface-container-high rounded-2xl flex items-center justify-center text-2xl">' + selectedEmoji + '</div><div class="flex-1"><p class="font-body-lg text-on-surface font-medium">' + name + '</p><p class="font-label-sm text-on-surface-variant">自定义分类</p></div><button class="text-status-error font-label-sm active:scale-95" onclick="this.parentElement.remove()">删除</button>';
-  container.appendChild(div);
-  closeAddCategory();
-};
+  var res = await apiPost('/api/categories', {name: name, icon: selectedEmoji, color: '#7EC850'});
+  if (res.code === 200) {
+    showToast('✓ 分类已添加', 'success');
+    closeAddCategory();
+    refreshCategories();
+  } else {
+    showToast(res.message || '添加失败', 'error');
+  }
+}
 
-// Security functions
-window.changePassword = function() {
+// ==================== SECURITY ====================
+async function changePassword() {
   var oldPwd = document.getElementById('oldPassword').value;
   var newPwd = document.getElementById('newPassword').value;
   var confirmPwd = document.getElementById('confirmNewPassword').value;
-  if (!oldPwd) { alert('请输入当前密码'); return; }
-  if (!newPwd || newPwd.length < 6) { alert('新密码至少6位'); return; }
-  if (newPwd !== confirmPwd) { alert('两次新密码不一致'); return; }
-  alert('密码修改成功！');
-  document.getElementById('oldPassword').value = '';
-  document.getElementById('newPassword').value = '';
-  document.getElementById('confirmNewPassword').value = '';
-  switchTo('settings');
+  if (!oldPwd) { showToast('请输入当前密码', 'error'); return; }
+  if (!newPwd || newPwd.length < 6) { showToast('新密码至少6位', 'error'); return; }
+  if (newPwd !== confirmPwd) { showToast('两次密码不一致', 'error'); return; }
+  var res = await apiPost('/api/auth/change-password', {oldPassword: oldPwd, newPassword: newPwd});
+  if (res.code === 200) {
+    showToast('密码修改成功', 'success');
+    document.getElementById('oldPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmNewPassword').value = '';
+    switchTo('settings');
+  } else {
+    showToast(res.message || '修改失败', 'error');
+  }
+}
+
+// ==================== EXPORT ====================
+async function exportCSV() {
+  var now = new Date();
+  var month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var res = await apiGet('/api/expenses?month=' + month);
+  if (res.code !== 200 || !res.data || res.data.length === 0) { showToast('该月无记录', 'error'); return; }
+  var csv = '﻿日期,分类,金额,备注\n' + res.data.map(function(e) {
+    var cat = e.category || {};
+    return e.expenseDate + ',' + (cat.name || '') + ',-' + e.amount + ',' + (e.note || '');
+  }).join('\n');
+  var blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '财务管家_' + month + '.csv'; a.click();
+  showToast('✓ 导出成功', 'success');
+}
+
+// ==================== NUMPAD ====================
+window.appendNum = function(n) {
+  var input = document.querySelector('#page-record_panel input[type=text]');
+  if (!input) return;
+  var val = input.value.replace(/[^0-9.]/g, '');
+  if (val.length >= 10) return;
+  input.value = val + n;
+};
+window.deleteLastChar = function() {
+  var input = document.querySelector('#page-record_panel input[type=text]');
+  if (!input) return;
+  input.value = input.value.slice(0, -1);
+};
+window.togglePassword = function(id) {
+  var input = document.getElementById(id || 'password');
+  var icon = document.getElementById('eye-icon');
+  if (!input) return;
+  if (input.type === 'password') { input.type = 'text'; if (icon) icon.innerText = 'visibility_off'; }
+  else { input.type = 'password'; if (icon) icon.innerText = 'visibility'; }
 };
 
-document.addEventListener("keydown", function(e) {
-  if (e.key === "Enter" && document.getElementById("page-login").classList.contains("active")) { switchTo("dashboard"); }
-});
+// ==================== INIT ====================
+function init() {
+  // Check existing session
+  var token = localStorage.getItem('fm_token');
+  var user = localStorage.getItem('fm_user');
+  if (token && user) {
+    AUTH_TOKEN = token;
+    document.getElementById('displayName').textContent = user;
+    // Quick validate token
+    apiGet('/api/auth/me').then(function(res) {
+      if (res.code === 200) {
+        switchTo('dashboard');
+      } else {
+        AUTH_TOKEN = ''; localStorage.removeItem('fm_token');
+        switchTo('login');
+      }
+    });
+  } else {
+    switchTo('login');
+  }
+
+  // Enter key in login
+  document.getElementById('loginPassword').addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
+  var cpEl = document.getElementById('confirm-password');
+if (cpEl) cpEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleRegister(); });
+}
+
+// Expose saveNewCategory globally
+window.saveNewCategory = saveNewCategory;
+
+init();
 </script>
+
+<!-- TOAST -->
+<div class="toast" id="toast" style="position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);background:#4A9E3F;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transition:all .3s;opacity:0;white-space:nowrap;pointer-events:none"></div>
+
+<!-- EXPENSE MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-content">
+    <div class="modal-header"><h2 class="modal-title" id="modalTitle">记一笔</h2><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="form-section"><label class="form-label">选择分类</label><div class="cat-grid" id="modalCatGrid"></div></div>
+    <div class="form-section"><label class="form-label">金额</label><div class="amt-wrap"><span class="amt-prefix">¥</span><input type="number" class="amt-input" id="amtInput" placeholder="0.00" step="0.01" min="0"></div></div>
+    <div class="form-section"><label class="form-label">日期</label><input type="date" class="form-input" id="dateInput"></div>
+    <div class="form-section"><label class="form-label">备注（可选）</label><input type="text" class="form-input" id="noteInput" placeholder="添加备注..."></div>
+    <button class="submit-btn" onclick="submitExpense()" id="submitBtn">✓ 记一笔</button>
+  </div>
+</div>
+
+<style>
+#addModal .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;visibility:hidden;transition:all .3s}
+#addModal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;visibility:hidden;transition:all .3s}
+#addModal.active{opacity:1;visibility:visible}
+#addModal .modal-content{background:var(--bg);width:100%;max-width:480px;border-radius:28px 28px 0 0;padding:24px 20px 36px;transform:translateY(100%);transition:transform .3s ease;max-height:85vh;overflow-y:auto}
+#addModal.active .modal-content{transform:translateY(0)}
+#addModal .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+#addModal .modal-title{font-size:20px;font-weight:700}
+#addModal .modal-close{width:36px;height:36px;border:none;background:var(--card);border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text)}
+#addModal .form-section{margin-bottom:16px}
+#addModal .form-label{font-size:14px;font-weight:600;margin-bottom:8px;display:block;color:var(--text)}
+#addModal .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#addModal .cat-opt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:none;background:var(--card);border-radius:14px;cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text)}
+#addModal .cat-opt:hover{background:var(--primary-light)}
+#addModal .cat-opt.selected{background:var(--primary);color:#fff}
+#addModal .cat-opt .ico{font-size:20px}
+#addModal .cat-opt .nam{font-size:11px}
+#addModal .amt-wrap{position:relative}
+#addModal .amt-prefix{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:700;color:var(--text2)}
+#addModal .amt-input{width:100%;padding:16px 16px 16px 44px;font-size:28px;font-weight:800;border:2px solid var(--card);border-radius:14px;outline:none;background:var(--white);color:var(--text);font-family:inherit}
+#addModal .form-input{width:100%;padding:12px 14px;font-size:14px;border:2px solid var(--card);border-radius:14px;outline:none;background:var(--white);color:var(--text);font-family:inherit}
+#addModal .submit-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.toast.show{transform:translateX(-50%) translateY(0)!important;opacity:1!important}
+</style>
 </body>
 </html>
